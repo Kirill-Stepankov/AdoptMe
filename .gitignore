@@ -1,0 +1,3 @@
+venv/
+adoptme/db.sqlite3
+adoptme/adoptme/__pycache__
