@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView
+from django.views.generic import CreateView, View
 from django.contrib.auth import login, logout
-from .forms import RegisterForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import RegisterForm, LoginForm
+from django.urls import reverse_lazy
 
 class RegisterView(CreateView):
     form_class = RegisterForm
@@ -12,3 +15,11 @@ class RegisterView(CreateView):
         login(self.request, user)
         return redirect('home')
 
+class LoginUserView(LoginView):
+    form_class = LoginForm
+    template_name = 'userprofile/login.html'
+    next_page = reverse_lazy('profile:home')
+
+class IndexView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'userprofile/index.html', context={'title': 'home'})
