@@ -1,3 +1,7 @@
 venv/
 adoptme/db.sqlite3
 adoptme/adoptme/__pycache__
+adoptme/userprofile/__pycache__
+adoptme/userprofile/migrations
+TODO.txt
+
