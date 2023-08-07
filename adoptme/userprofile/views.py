@@ -5,6 +5,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import RegisterForm, LoginForm
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+
 
 class RegisterView(CreateView):
     form_class = RegisterForm
@@ -13,7 +15,7 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('home')
+        return redirect('profile:home')
 
 class LoginUserView(LoginView):
     form_class = LoginForm
