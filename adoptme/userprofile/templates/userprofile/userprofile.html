@@ -1,0 +1,31 @@
+{% extends 'userprofile/common/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center" style="margin-top: 40px;">
+    <div class="row">
+        <div class="col-4">
+            <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
+            {% if userprofile.user == request.user %}
+            <a href="#">Edit your profile</a>
+            {% endif %}
+        </div>
+        <div class="col-6 text-start">
+            <h1>{{userprofile.user.username}}</h1>
+            {% if userprofile.about %}
+                <p>{{ userprofile.about }}</p>
+            {% else %}
+                No bio
+            {% endif %}
+        </div>
+        <div class="col-2">
+        </div>
+    </div>
+    <p><h1>Ads</h1></p>
+    <div class="row text-start">
+        <div class="col">
+            <h1>dfsdfsf</h1>
+        </div>
+    </div>
+</div>
+{% endblock %}
