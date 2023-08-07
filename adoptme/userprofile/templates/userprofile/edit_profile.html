@@ -1,32 +1,35 @@
 {% extends 'userprofile/common/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container text-center" style="margin-top: 40px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
     <div class="row">
-        <div class="col-4">
+        <div class="col-4 text-center">
             {% if not userprofile.profile_pic %}
             <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
             {% else %}
-            <p><img src="{{ userprofile.profile_pic.url }}" alt="My image" style="width:70%"></p>
+            <p><img src="{{ userprofile.profile_pic.url }}" alt="My image" style="width: 70%;"></p>
             {% endif %}
-            {% if userprofile.user == request.user %}
-            <a href="{% url 'profile:edit_profile' userprofile.slug %}">Edit your profile</a>
-            {% endif %}
+            <div class="text-center" style="width: 60%; margin: auto">
+            {{ form.profile_pic|as_crispy_field }}
+        </div>
         </div>
         <div class="col-6 text-start">
+            <div style="width: 80%;">
             <h1>{{userprofile.user.username}}</h1> 
-            <h5>{{userprofile.get_sex_display}}</h5>
-            {% if userprofile.about %}
-                <p>{{ userprofile.about }}</p>
-            {% else %}
-                No bio
-            {% endif %}
+            <h5>{{ form.sex|as_crispy_field }}</h5>
+            {{ form.about|as_crispy_field }}
+            <button type="submit" class="btn btn-success">Save person</button>
+        </div>
         </div>
         <div class="col-2">
         </div>
     </div>
     <p><h1>Ads</h1></p>
+</form>
     <div class="row text-start">
         <div class="col">
             <h1>dfsdfsf</h1>
