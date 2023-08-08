@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Any, Optional
+from django.db import models
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, View, DetailView, UpdateView
 from django.contrib.auth import login, logout
@@ -8,7 +9,7 @@ from .forms import RegisterForm, LoginForm, ProfileUpdateForm
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Profile
+from .models import Profile, PetAdvert
 from .utils import unauthenticated_user
 
 
@@ -40,7 +41,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        context['petads'] = PetAdvert.objects.filter(owner=self.request.user.profile)
         return context
 
     # def test_func(self):
@@ -52,6 +53,29 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     form_class = ProfileUpdateForm
     slug_url_kwarg = 'profile_slug'
     template_name = "userprofile/edit_profile.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
+    
+class CreatePetAdView(LoginRequiredMixin, CreateView):
+    model = PetAdvert
+    fields = [
+        'name',
+        'photo',
+        'about',
+        'gender',
+        'type',
+        'size',
+        'age',
+        'breed'
+    ]
+    template_name = "userprofile/create_pet_ad.html"
+
+    def form_valid(self, form):
+        PetAdvert.objects.create(owner=self.request.user.profile, **form.cleaned_data)
+        print(*form.cleaned_data)
+        return redirect('profile:home')
+    
 
 
 

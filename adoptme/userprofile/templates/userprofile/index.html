@@ -1,6 +1,8 @@
 {% extends 'userprofile/common/base.html' %}
 
 {% block content %}
-<a href="{% url 'profile:logout'%}">Logout</a>
+<div class="container">
+    <h1>Hello, {{request.user.username}}</h1>
+</div>
 {% endblock %}
 

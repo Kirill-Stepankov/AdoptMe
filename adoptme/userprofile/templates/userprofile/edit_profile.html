@@ -11,7 +11,7 @@
             {% if not userprofile.profile_pic %}
             <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
             {% else %}
-            <p><img src="{{ userprofile.profile_pic.url }}" alt="My image" style="width: 70%;"></p>
+            <p><img src="{{ userprofile.profile_pic.url }}" class="rounded-4 border border-5" alt="My image" style="width: 70%;"></p>
             {% endif %}
             <div class="text-center" style="width: 60%; margin: auto">
             {{ form.profile_pic|as_crispy_field }}
@@ -28,12 +28,6 @@
         <div class="col-2">
         </div>
     </div>
-    <p><h1>Ads</h1></p>
 </form>
-    <div class="row text-start">
-        <div class="col">
-            <h1>dfsdfsf</h1>
-        </div>
-    </div>
 </div>
 {% endblock %}

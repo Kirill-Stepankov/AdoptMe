@@ -4,32 +4,64 @@
 {% block content %}
 <div class="container text-center" style="margin-top: 40px;">
     <div class="row">
-        <div class="col-4">
-            {% if not userprofile.profile_pic %}
-            <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
-            {% else %}
-            <p><img src="{{ userprofile.profile_pic.url }}" alt="My image" style="width:70%"></p>
-            {% endif %}
-            {% if userprofile.user == request.user %}
-            <a href="{% url 'profile:edit_profile' userprofile.slug %}">Edit your profile</a>
-            {% endif %}
+        <div class="col-4 text-start">
+            <div class="text-center">
+                {% if not userprofile.profile_pic %}
+                <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
+                {% else %}
+                <p><img src="{{ userprofile.profile_pic.url }}" class="rounded-4 border border-5" alt="My image" style="width:70%"></p>
+                {% endif %}
+            </div>
+            <div class="col-9 text-start mx-auto">
+                <h1>{{userprofile.user.username}}</h1> 
+                <h5>{{userprofile.get_sex_display}}</h5>
+                {% if userprofile.about %}
+                    <p>{{ userprofile.about }}</p>
+                {% else %}
+                    No bio
+                {% endif %}
+            </div>
+            <div class="text-center">
+                {% if userprofile.user == request.user %}
+                    <a class="btn btn-dark" href="{% url 'profile:edit_profile'%}" style="width: 75%;">Edit your profile</a>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-6 text-start">
-            <h1>{{userprofile.user.username}}</h1> 
-            <h5>{{userprofile.get_sex_display}}</h5>
-            {% if userprofile.about %}
-                <p>{{ userprofile.about }}</p>
-            {% else %}
-                No bio
-            {% endif %}
-        </div>
-        <div class="col-2">
-        </div>
-    </div>
-    <p><h1>Ads</h1></p>
-    <div class="row text-start">
-        <div class="col">
-            <h1>dfsdfsf</h1>
+        <div class="col-7 text-start">
+            <nav class="navbar bg-body-tertiary navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 20px;">
+                  <span class="navbar-brand mb-0 h1">Ads:</span>
+                  <ul class="nav navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                        <a class="btn btn-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Type</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Sitter Ad</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile:create_petad' %}">Pet Ad</a></li>
+                          </ul>
+                    </li>
+                    <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                        <a class="btn btn-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Filter</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Date Created +</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile:edit_profile'  %}">Date Created -</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile:edit_profile'  %}">Name</a></li>
+                          </ul>
+                    </li>
+                    {% if userprofile.user == request.user %}
+                    <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                        <a class="btn btn-success dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Create</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Sitter Ad</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile:create_petad' %}">Pet Ad</a></li>
+                          </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+              </nav>
+              {% for ad in petads %}
+              <div class="row">
+                <h1>{{ad.name}}</h1>
+              </div>
+              {% endfor %}
         </div>
     </div>
 </div>

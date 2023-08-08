@@ -4,6 +4,12 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Profile
 
 class RegisterForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+
+        for fieldname in ['username', 'email', 'password1', 'password2']:
+            self.fields[fieldname].help_text = None
+
     class Meta:
         model = User
         fields = [

@@ -1,9 +1,25 @@
 {% extends 'userprofile/common/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Register">
-</form>
+<div class="container" style="margin-top: 40px;">
+    <div class="row">
+        <div class="col-4 mx-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                      {{ form.username|as_crispy_field }}
+                    </div>
+                    <div class="col-6">
+                      {{ form.email|as_crispy_field }}
+                    </div>
+                  </div>
+                  {{ form.password1|as_crispy_field }}
+                  {{ form.password2|as_crispy_field }}
+                <button type="submit" class="btn btn-success">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
