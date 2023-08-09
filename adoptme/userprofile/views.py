@@ -5,7 +5,7 @@ from django.views.generic import CreateView, View, DetailView, UpdateView
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import RegisterForm, LoginForm, ProfileUpdateForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm, PetAdvertForm
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -59,16 +59,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     
 class CreatePetAdView(LoginRequiredMixin, CreateView):
     model = PetAdvert
-    fields = [
-        'name',
-        'photo',
-        'about',
-        'gender',
-        'type',
-        'size',
-        'age',
-        'breed'
-    ]
+    form_class = PetAdvertForm
     template_name = "userprofile/create_pet_ad.html"
 
     def form_valid(self, form):

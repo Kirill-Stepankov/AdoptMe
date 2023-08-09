@@ -27,7 +27,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-7 text-start">
+        <div class="col text-start">
             <nav class="navbar bg-body-tertiary navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 20px;">
                   <span class="navbar-brand mb-0 h1">Ads:</span>
                   <ul class="nav navbar-nav ms-auto d-flex align-items-center">
@@ -58,8 +58,21 @@
                 </ul>
               </nav>
               {% for ad in petads %}
-              <div class="row">
-                <h1>{{ad.name}}</h1>
+              <div class="row" style="margin-bottom: 20px;">
+                <div class="col-4 text-center">
+                    <img class="rounded-5 border border-4" src="{% static 'userprofile/images/500x500.jpg'%}" style="width: 70%;">
+                </div>
+                <div class="col-6 text-start">
+                    <a href="#" class="link-dark link-underline-opacity-25"><h1>{{ad.name}}</h1></a>
+                    <p>{{ad.about|linebreaks|truncatewords:37}}</p>
+                </div>
+                <div class="col-2 d-flex align-items-center" >
+                    <span class="align-middle">
+                        <a class="btn btn-dark" style="width: 100%; margin-bottom: 10px;">More info</a>
+                        <a class="btn btn-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
+                        <a class="btn btn-danger" style="width: 100%; margin-bottom: 10px;">Delete</a>
+                    </span>
+                </div>
               </div>
               {% endfor %}
         </div>
