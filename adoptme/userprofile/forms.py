@@ -49,6 +49,7 @@ class ProfileUpdateForm(forms.ModelForm):
        return picture
 
 class PetAdvertForm(forms.ModelForm):
+    photo = forms.ImageField(widget=forms.widgets.FileInput)
     class Meta:
         model = PetAdvert
         fields = [

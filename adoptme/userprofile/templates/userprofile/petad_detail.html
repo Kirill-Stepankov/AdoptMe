@@ -1,0 +1,25 @@
+{% extends 'userprofile/common/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="row" style="margin-top: 40px;">
+            <div class="col-4">
+                <img class="rounded-5 border border-4" src="{{ petad.photo.url }}" alt="PetAdvert" style="width: 70%;">
+                <h3 style="margin-top: 20px;">Information:</h3>
+                Gender: {{petad.get_gender_display}} <br>
+                Type: {{petad.get_type_display}} <br>
+                Size: {{petad.get_size_display}} <br>
+                Age: {{petad.age}} <br>
+                Breed: {{petad.breed}}
+
+            </div>
+            <div class="col-6">
+                <h1>{{petad.name}}</h1>
+                <h3>Owner: <a href="{% url 'profile:profile' petad.owner.slug %}">{{petad.owner.user.username}}</a></h3>
+                <p>{{petad.about|linebreaks}}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,7 +1,7 @@
 from typing import Any, Optional
 from django.db import models
 from django.shortcuts import render, redirect
-from django.views.generic import CreateView, View, DetailView, UpdateView
+from django.views.generic import CreateView, View, DetailView, UpdateView, DeleteView
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import Profile, PetAdvert
 from .utils import unauthenticated_user
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpRequest, HttpResponse
+from django.db.models import Q
 
 
 @method_decorator(unauthenticated_user, name='dispatch')
@@ -41,7 +45,8 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['petads'] = PetAdvert.objects.filter(owner=self.request.user.profile)
+        context['petads'] = PetAdvert.objects.filter(owner=kwargs['object']).order_by(self.request.GET.get('ordering_type') or 'name')
+        print(self.request)
         return context
 
     # def test_func(self):
@@ -64,10 +69,53 @@ class CreatePetAdView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         PetAdvert.objects.create(owner=self.request.user.profile, **form.cleaned_data)
-        print(*form.cleaned_data)
-        return redirect('profile:home')
+        return redirect(self.get_success_url())
     
+    def get_success_url(self):
+        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
+    
+class PetAdDetailView(DetailView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+    template_name = 'userprofile/petad_detail.html'
+    context_object_name = 'petad'
 
+class PetAdUpdateView(UpdateView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+    context_object_name = 'petad'
+    form_class = PetAdvertForm
+    template_name = 'userprofile/petad_edit.html'
+
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        if obj.owner != self.request.user.profile:
+            raise Http404
+        return obj
+    
+    def get_success_url(self):
+        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
+
+class PetAdDeleteView(DeleteView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object() 
+        self.object.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        if obj.owner != self.request.user.profile:
+            raise Http404
+        return obj
 
 
     

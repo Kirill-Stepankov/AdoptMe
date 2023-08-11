@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="col text-start">
-            <nav class="navbar bg-body-tertiary navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 20px;">
+            <nav class="navbar navbar-expand-lg" style="margin-bottom: 20px; background-color: white;">
                   <span class="navbar-brand mb-0 h1">Ads:</span>
                   <ul class="nav navbar-nav ms-auto d-flex align-items-center">
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
@@ -41,14 +41,35 @@
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
                         <a class="btn btn-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Filter</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Date Created +</a></li>
-                            <li><a class="dropdown-item" href="{% url 'profile:edit_profile'  %}">Date Created -</a></li>
-                            <li><a class="dropdown-item" href="{% url 'profile:edit_profile'  %}">Name</a></li>
+                            <li>
+                                <form method="GET">
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="time_create" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Date Created +</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="GET">
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="-time_create" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Data Created -</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="GET">
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="name" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Name +</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="GET">
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="-name" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Name -</button>
+                                </form>
+                            </li>
                           </ul>
                     </li>
                     {% if userprofile.user == request.user %}
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
-                        <a class="btn btn-success dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Create</a>
+                        <a class="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgb(69, 167, 77); color: white;">Create</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Sitter Ad</a></li>
                             <li><a class="dropdown-item" href="{% url 'profile:create_petad' %}">Pet Ad</a></li>
@@ -58,22 +79,27 @@
                 </ul>
               </nav>
               {% for ad in petads %}
-              <div class="row" style="margin-bottom: 20px;">
-                <div class="col-4 text-center">
-                    <img class="rounded-5 border border-4" src="{% static 'userprofile/images/500x500.jpg'%}" style="width: 70%;">
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-4 text-center">
+                        <img class="rounded-5 border border-4" src="{{ad.photo.url}}" alt="PetAdvert" style="width: 70%;">
+                    </div>
+                    <div class="col-6 text-start">
+                        <a href="{% url 'profile:petad_detail' ad.pk %}" class="link-dark link-underline-opacity-25"><h1>{{ad.name}}</h1></a>
+                        <p>{{ad.about|linebreaks|truncatewords:37}}</p>
+                    </div>
+                    <div class="col-2 d-flex align-items-center" >
+                        <span class="align-middle">
+                            <a href="{% url 'profile:petad_detail' ad.pk %}" class="btn btn-dark" style="width: 100%; margin-bottom: 10px;">More info</a>
+                            {% if ad.owner == request.user.profile %}
+                            <a href="{% url 'profile:petad_update' ad.pk %}" class="btn" style="width: 100%; margin-bottom: 10px; background-color: rgb(69, 167, 77); color: white;">Edit</a>
+                            <form method="POST" action="{% url 'profile:petad_delete' ad.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn" style="width: 100%; margin-bottom: 10px; background-color: lightcoral; color: white;">Delete</button>
+                             </form>
+                            {% endif %}
+                        </span>
+                    </div>
                 </div>
-                <div class="col-6 text-start">
-                    <a href="#" class="link-dark link-underline-opacity-25"><h1>{{ad.name}}</h1></a>
-                    <p>{{ad.about|linebreaks|truncatewords:37}}</p>
-                </div>
-                <div class="col-2 d-flex align-items-center" >
-                    <span class="align-middle">
-                        <a class="btn btn-dark" style="width: 100%; margin-bottom: 10px;">More info</a>
-                        <a class="btn btn-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
-                        <a class="btn btn-danger" style="width: 100%; margin-bottom: 10px;">Delete</a>
-                    </span>
-                </div>
-              </div>
               {% endfor %}
         </div>
     </div>
