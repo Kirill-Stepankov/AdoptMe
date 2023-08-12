@@ -5,15 +5,21 @@
 {% block content %}
 <div class="container" style="margin-top: 40px;">
     <div class="row">
-        <div class="col-4 mx-auto">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <p>
-                    If you don't have an account, click to register: <a href="{% url 'profile:register' %}">Register</a>
-                </p>
-                <button type="submit" class="btn btn-success">Login</button>
-            </form>
+        <div class="col-5 mx-auto">
+            <div class="card border-light shadow">
+                <div class="col mx-auto">
+                    <form method="POST" style="margin-left: 20px; margin-right: 20px;">
+                        <p></p>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <p>
+                            If you don't have an account, click to register: <a href="{% url 'profile:register' %}">Register</a>
+                        </p>
+                        <button type="submit" class="btn btn-success">Login</button>
+                        <p></p>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

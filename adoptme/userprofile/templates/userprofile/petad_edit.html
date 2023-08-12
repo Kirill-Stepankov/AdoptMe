@@ -4,13 +4,49 @@
 
 {% block content %}
     <div class="container">
-        <div class="row" style="margin-bottom: 40px;">
+        <div class="row" style="margin-bottom: 40px; margin-top: 40px;">
             <div class="col-8 mx-auto">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <button type="submit" class="btn btn-success">Save ad</button>
-                </form>
+                <div class="card shadow border-light">
+                    <div class="col-8 mx-auto">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <p></p>
+                                <div class="col-12 text-center">
+                                    <h1>Edit pet advert</h1>
+                                </div>
+                                <div class="col-6">
+                                    {{form.name|as_crispy_field}}
+                                </div>
+                                <div class="col-6">
+                                    {{form.photo|as_crispy_field}}
+                                </div>
+                                <div class="col-12">
+                                    {{form.about|as_crispy_field}}
+                                </div>
+                                <div class="col-6">
+                                    {{form.gender|as_crispy_field}}
+                                </div>
+                                <div class="col-6">
+                                    {{form.type|as_crispy_field}}
+                                </div>
+                                <div class="col-6">
+                                    {{form.size|as_crispy_field}}
+                                </div>
+                                <div class="col-6">
+                                    {{form.age|as_crispy_field}}
+                                </div>
+                                <div class="col-12">
+                                    {{form.breed|as_crispy_field}}
+                                </div>
+                                <div class="col">
+                                    <button type="submit" style="width: 100%;" class="btn btn-success">Save ad</button>
+                                </div>
+                                <p></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

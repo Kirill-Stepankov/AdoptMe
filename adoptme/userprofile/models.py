@@ -66,6 +66,10 @@ class PetAdvert(models.Model):
         ])
     breed = models.CharField(max_length=100)
     
+class PetAdvertPhoto(models.Model):
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d/")
+    pet_advert = models.ForeignKey(PetAdvert, on_delete=models.CASCADE, related_name='photos')
+
 
 
     
