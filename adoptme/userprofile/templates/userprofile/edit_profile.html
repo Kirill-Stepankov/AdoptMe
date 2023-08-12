@@ -8,26 +8,33 @@
         {% csrf_token %}
     <div class="row">
         <div class="col-4 text-center">
-            {% if not userprofile.profile_pic %}
-            <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
-            {% else %}
-            <p><img src="{{ userprofile.profile_pic.url }}" class="rounded-4 border border-5" alt="My image" style="width: 70%;"></p>
-            {% endif %}
-            <div class="text-center" style="width: 60%; margin: auto">
-            {{ form.profile_pic|as_crispy_field }}
-        </div>
+            <div class="card border-light shadow">
+                <p></p>
+                {% if not userprofile.profile_pic %}
+                <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
+                {% else %}
+                <p><img src="{{ userprofile.profile_pic.url }}" class="rounded-4 " alt="My image" style="width: 70%;"></p>
+                {% endif %}
+                <div class="text-center" style="width: 60%; margin: auto">
+                    {{ form.profile_pic|as_crispy_field }}
+                </div>
+                <p></p>
+            </div>
         </div>
         <div class="col-6 text-start">
-            <div style="width: 80%;">
-            <h1>{{userprofile.user.username}}</h1> 
-            <h5>{{ form.sex|as_crispy_field }}</h5>
-            {{ form.about|as_crispy_field }}
-            <button type="submit" class="btn btn-success">Save person</button>
-        </div>
+            <div class="card border-light shadow">
+                <div  class="mx-auto">
+                    <p></p>
+                    <h1>{{userprofile.user.username}}</h1> 
+                    <h5>{{ form.sex|as_crispy_field }}</h5>
+                    {{ form.about|as_crispy_field }}
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Save person</button>
+                    <p></p>
+                </div>
+            </div>
         </div>
         <div class="col-2">
-        </div>
-    </div>
+        </div>    </div>
 </form>
 </div>
 {% endblock %}

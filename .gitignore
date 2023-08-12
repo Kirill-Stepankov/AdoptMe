@@ -5,3 +5,5 @@ adoptme/userprofile/__pycache__
 adoptme/userprofile/migrations
 TODO.txt
 adoptme/media
+adoptme/shelter/__pycache__
+adoptme/shelter/migrations

@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', LoginUserView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/<slug:profile_slug>', ProfileView.as_view(), name='profile'),
+    #path('profile/<slug:profile_slug>/<', ProfileView.as_view(), name='profile'),
     path('settings', EditProfileView.as_view(), name='edit_profile'),
     path('petad/create/', CreatePetAdView.as_view(), name='create_petad'),
     path('petad/detail/<int:petad_pk>', PetAdDetailView.as_view(), name='petad_detail'),
