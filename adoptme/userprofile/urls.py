@@ -1,7 +1,7 @@
 from django.urls import path 
 from .views import RegisterView, IndexView, LoginUserView, ProfileView, \
       EditProfileView, CreatePetAdView, PetAdDetailView, PetAdUpdateView, \
-      PetAdDeleteView
+      PetAdDeleteView, PetAdAddImageView
 from django.contrib.auth.views import LogoutView
 
 app_name = "profile"
@@ -16,5 +16,6 @@ urlpatterns = [
     path('petad/create/', CreatePetAdView.as_view(), name='create_petad'),
     path('petad/detail/<int:petad_pk>', PetAdDetailView.as_view(), name='petad_detail'),
     path('petad/edit/<int:petad_pk>', PetAdUpdateView.as_view(), name='petad_update'),
-    path('petad/delete/<int:petad_pk>', PetAdDeleteView.as_view(), name='petad_delete')
+    path('petad/delete/<int:petad_pk>', PetAdDeleteView.as_view(), name='petad_delete'),
+    path('petadd/<int:petad_pk>/images', PetAdAddImageView.as_view(), name='add_image')
 ]

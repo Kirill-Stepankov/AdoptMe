@@ -19,6 +19,10 @@
                 <h1>{{petad.name}}</h1>
                 <h3>Owner: <a href="{% url 'profile:profile' petad.owner.slug %}">{{petad.owner.user.username}}</a></h3>
                 <p>{{petad.about|linebreaks}}</p>
+                <a href="{% url 'profile:add_image' petad.id %}" class="btn btn-dark">Add Photos</a>
+                {% for photo in photos %}
+                <img src="{{photo.photo.url}}">
+                {% endfor %}
             </div>
         </div>
     </div>

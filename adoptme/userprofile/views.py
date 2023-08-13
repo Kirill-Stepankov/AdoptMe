@@ -1,15 +1,16 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from django.db import models
+from django.forms.models import BaseModelForm
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, View, DetailView, UpdateView, DeleteView
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import RegisterForm, LoginForm, ProfileUpdateForm, PetAdvertForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm, PetAdvertForm, PetAdvertPhotoForm
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Profile, PetAdvert
+from .models import Profile, PetAdvert, PetAdvertPhoto
 from .utils import unauthenticated_user
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -80,6 +81,11 @@ class PetAdDetailView(DetailView):
     template_name = 'userprofile/petad_detail.html'
     context_object_name = 'petad'
 
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        context['photos'] = PetAdvertPhoto.objects.filter(pet_advert__pk=self.kwargs['petad_pk']).all()
+        return context
+
 class PetAdUpdateView(UpdateView):
     model = PetAdvert
     pk_url_kwarg = 'petad_pk'
@@ -116,6 +122,28 @@ class PetAdDeleteView(DeleteView):
         if obj.owner != self.request.user.profile:
             raise Http404
         return obj
+
+class PetAdAddImageView(CreateView):
+    model = PetAdvertPhoto
+    template_name = 'userprofile/add_image.html'
+    pk_url_kwarg = 'petad_pk'
+    form_class = PetAdvertPhotoForm
+
+    def form_valid(self, form):
+        print(form)
+        print(form.data)
+        print(form.cleaned_data)
+        print(form.changed_data)
+        form.save()
+        # PetAdvertPhoto.objects.create(photo=form.cleaned_data['photo'], pet_advert=PetAdvert.objects.get(pk=form.cleaned_data['petad_pk']))
+        return redirect(reverse_lazy('profile:home'))
+    
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['petad_pk'] = self.kwargs['petad_pk']
+        return context
+    
+    
 
 
     

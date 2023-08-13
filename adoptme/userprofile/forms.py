@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Profile, PetAdvert
+from .models import Profile, PetAdvert, PetAdvertPhoto
 from django.core.files.images import get_image_dimensions
 
 
@@ -72,3 +72,12 @@ class PetAdvertForm(forms.ModelForm):
            if w != h:
                raise forms.ValidationError("The image must be square")
        return picture
+
+class PetAdvertPhotoForm(forms.ModelForm):
+    class Meta:
+        model = PetAdvertPhoto
+        fields = [
+            'photo',
+            'pet_advert'
+        ]
+        widgets = {'pet_advert': forms.HiddenInput()}
