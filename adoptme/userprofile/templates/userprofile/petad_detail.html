@@ -2,8 +2,65 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+{% block head %}
+<link rel="stylesheet" href="../../static/userprofile/css/carousel_photo.css">
+{% endblock %}
+
 {% block content %}
     <div class="container">
+        <h2 class="font-weight-light">Bootstrap Multi Slide Carousel</h2>
+    <div class="row mx-auto my-auto justify-content-center">
+        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-img">
+                                <img src="{{ petad.photo.url }}" class="img-fluid">
+                            </div>
+                            <div class="card-img-overlay">Slide 0</div>
+                        </div>
+                    </div>
+                </div>
+                {% for photo in photos %}
+                <div class="carousel-item">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-img">
+                                <img src="{{photo.photo.url}}" class="img-fluid">
+                            </div>
+                            <div class="card-img-overlay">Slide {{photo.id}}</div>
+                        </div>
+                    </div>
+                </div>  
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+    <script>
+        let items = document.querySelectorAll('.carousel .carousel-item')
+
+        items.forEach((el) => {
+            const minPerSlide = 4
+            let next = el.nextElementSibling
+            for (var i=1; i<minPerSlide; i++) {
+                if (!next) {
+            // wrap carousel by using first child
+            next = items[0]
+        }
+        let cloneChild = next.cloneNode(true)
+        el.appendChild(cloneChild.children[0])
+        next = next.nextElementSibling
+        }
+        })
+    </script>
+    ----------------------------------------------------------
         <div class="row" style="margin-top: 40px;">
             <div class="col-4">
                 <img class="rounded-5 border border-4" src="{{ petad.photo.url }}" alt="PetAdvert" style="width: 70%;">
@@ -20,10 +77,12 @@
                 <h3>Owner: <a href="{% url 'profile:profile' petad.owner.slug %}">{{petad.owner.user.username}}</a></h3>
                 <p>{{petad.about|linebreaks}}</p>
                 <a href="{% url 'profile:add_image' petad.id %}" class="btn btn-dark">Add Photos</a>
+
                 {% for photo in photos %}
                 <img src="{{photo.photo.url}}">
                 {% endfor %}
             </div>
         </div>
+    ----------------------------------------------------------
     </div>
 {% endblock %}
