@@ -6,10 +6,10 @@
             <div class="col">
                 <h1>Your shelters:</h1>
             </div>
-            <div class="col d-flex align-items-end">
-                <span class="allign-bottom">
-                    <a href="{% url 'shelter:create' %}" class="btn btn-success">Create</a>
-                </span>
+            <div class="col position-relative">
+                <div class="position-absolute end-0 translate-middle-y" style="margin-top: 40px; margin-right: 15px;">
+                    <a href="{% url 'shelter:create' %}" class="btn btn-outline-success">Create</a>
+                </div>
             </div>
         </div>
         {% if not request.user.profile.profile.all %}
@@ -26,13 +26,13 @@
                         <div class="row">
                             <div class="col-5"><h4>{{shelter.shelter.name}}</h4></div>
                             <div class="col-5 text-end">
-                                <a href="{% url 'shelter:detail' shelter.shelter.slug %}" class="btn btn-light" style="margin-right: 15px;">Main Page</a>
-                                <a class="btn btn-success" style="background-color: white; color: rgb(45, 165, 45);">Settings</a>
+                                <a href="{% url 'shelter:detail' shelter.shelter.slug %}" class="btn btn-outline-dark" style="margin-right: 15px;">Main Page</a>
+                                <a class="btn btn-outline-success">Settings</a>
                             </div>
                             <div class="col-2">
                                 <form method="post" action="{% url 'shelter:delete' shelter.shelter.id %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger" style="background-color: white; color: rgb(187, 50, 50);">Delete</button>
+                                    <button type="submit" class="btn btn-outline-danger">Delete</button>
                                 </form>
                             </div>
                         </div>
