@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import Q
+from django.views.generic.edit import FormMixin
 
 
 @method_decorator(unauthenticated_user, name='dispatch')
@@ -75,16 +76,34 @@ class CreatePetAdView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
     
-class PetAdDetailView(DetailView):
+class PetAdDetailView(FormMixin, DetailView):
     model = PetAdvert
     pk_url_kwarg = 'petad_pk'
     template_name = 'userprofile/petad_detail.html'
     context_object_name = 'petad'
+    form_class = PetAdvertPhotoForm
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context =  super().get_context_data(**kwargs)
         context['photos'] = PetAdvertPhoto.objects.filter(pet_advert__pk=self.kwargs['petad_pk']).all()
+        form = PetAdvertPhotoForm()
+        context['form'] = form
         return context
+
+    def get_success_url(self):
+        return reverse_lazy('profile:petad_detail', kwargs={'petad_pk': self.kwargs['petad_pk']})
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(PetAdDetailView, self).form_valid(form)
 
 class PetAdUpdateView(UpdateView):
     model = PetAdvert
@@ -122,26 +141,6 @@ class PetAdDeleteView(DeleteView):
         if obj.owner != self.request.user.profile:
             raise Http404
         return obj
-
-class PetAdAddImageView(CreateView):
-    model = PetAdvertPhoto
-    template_name = 'userprofile/add_image.html'
-    pk_url_kwarg = 'petad_pk'
-    form_class = PetAdvertPhotoForm
-
-    def form_valid(self, form):
-        print(form)
-        print(form.data)
-        print(form.cleaned_data)
-        print(form.changed_data)
-        form.save()
-        # PetAdvertPhoto.objects.create(photo=form.cleaned_data['photo'], pet_advert=PetAdvert.objects.get(pk=form.cleaned_data['petad_pk']))
-        return redirect(reverse_lazy('profile:home'))
-    
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['petad_pk'] = self.kwargs['petad_pk']
-        return context
     
     
 

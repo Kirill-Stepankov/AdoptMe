@@ -7,6 +7,7 @@ from django.views.generic import ListView, View, CreateView, DeleteView, DetailV
 from .models import Shelter, ShelterProfile
 from django.urls import reverse_lazy
 from django.http import Http404, HttpRequest
+from pytils.translit import slugify
 
 class SheltersView(ListView):
     model = ShelterProfile
@@ -34,7 +35,7 @@ class ShelterCreateView(CreateView):
     ]
 
     def form_valid(self, form):
-        shelter = Shelter.objects.create(slug="".join(form.cleaned_data['name'].split()),**form.cleaned_data)
+        shelter = Shelter.objects.create(slug=slugify(form.cleaned_data['name']),**form.cleaned_data)
         ShelterProfile.objects.create(shelter=shelter, profile=self.request.user.profile, role=ShelterProfile.RoleChoices.ADMIN)
         return redirect(reverse_lazy('shelter:shelters'))
     

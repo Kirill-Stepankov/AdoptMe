@@ -2,6 +2,9 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+{% block headd %}
+
+{% endblock %}
 
 {% block content %}
     <div class="row text-center shadow-lg" style="height: 50px; background-color: rgb(236, 138, 26); color: white;">
@@ -10,12 +13,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
                   </svg>
-                <a href="#" class="h5 link-underline link-underline-opacity-0" style="color: white;">adsd</a>
+                <a href="#" class="h6 link-underline link-underline-opacity-0" style="color: white;">Find a Pet</a>
             </div>
         </div>
         <div class="col-6 position-relative">
             <div class="position-absolute top-50 start-50 translate-middle">
-                <a href="#" class="h5 link-underline link-underline-opacity-0" style="color: white;">dsdsd</a>
+                <a href="#" class="h6 link-underline link-underline-opacity-0" style="color: white;">Next Pet</a>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
                   </svg>
@@ -58,11 +61,38 @@
                 <div class="col">
                     <h1>{{petad.name}}</h1>
                     <h3>Owner: <a href="{% url 'profile:profile' petad.owner.slug %}">{{petad.owner.user.username}}</a></h3>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Add image
+                    </button>
+                    
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add image</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form method="post" enctype="multipart/form-data">
+
+                                <div class="modal-body">
+                                        {% csrf_token %}
+                                        {{form|crispy}}
+                                        <input type="hidden" name='pet_advert' value="{{petad.id}}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-outline-success">Add</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row" style="height: 600px;">
                 <div class="col">
-                    ;
+                    
                 </div>
             </div>
         </div>
