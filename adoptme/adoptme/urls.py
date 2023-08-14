@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('userprofile.urls')),
-    path('shelter/', include('shelter.urls'))
+    path('shelter/', include('shelter.urls')),
+    path('petad/', include('petadvert.urls'))
 ]
 
 

@@ -6,17 +6,17 @@ from django.views.generic import CreateView, View, DetailView, UpdateView, Delet
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import RegisterForm, LoginForm, ProfileUpdateForm, PetAdvertForm, PetAdvertPhotoForm
+from .forms import RegisterForm, LoginForm, ProfileUpdateForm
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .models import Profile, PetAdvert, PetAdvertPhoto
+from .models import Profile
 from .utils import unauthenticated_user
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import Q
-from django.views.generic.edit import FormMixin
+from petadvert.models import PetAdvert
 
 
 @method_decorator(unauthenticated_user, name='dispatch')
@@ -64,83 +64,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.profile
     
-class CreatePetAdView(LoginRequiredMixin, CreateView):
-    model = PetAdvert
-    form_class = PetAdvertForm
-    template_name = "userprofile/create_pet_ad.html"
 
-    def form_valid(self, form):
-        PetAdvert.objects.create(owner=self.request.user.profile, **form.cleaned_data)
-        return redirect(self.get_success_url())
-    
-    def get_success_url(self):
-        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
-    
-class PetAdDetailView(FormMixin, DetailView):
-    model = PetAdvert
-    pk_url_kwarg = 'petad_pk'
-    template_name = 'userprofile/petad_detail.html'
-    context_object_name = 'petad'
-    form_class = PetAdvertPhotoForm
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context =  super().get_context_data(**kwargs)
-        context['photos'] = PetAdvertPhoto.objects.filter(pet_advert__pk=self.kwargs['petad_pk']).all()
-        form = PetAdvertPhotoForm()
-        context['form'] = form
-        return context
-
-    def get_success_url(self):
-        return reverse_lazy('profile:petad_detail', kwargs={'petad_pk': self.kwargs['petad_pk']})
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        form.save()
-        return super(PetAdDetailView, self).form_valid(form)
-
-class PetAdUpdateView(UpdateView):
-    model = PetAdvert
-    pk_url_kwarg = 'petad_pk'
-    context_object_name = 'petad'
-    form_class = PetAdvertForm
-    template_name = 'userprofile/petad_edit.html'
-
-    def get_object(self, queryset = None):
-        obj =  super().get_object(queryset)
-        if obj.owner != self.request.user.profile:
-            raise Http404
-        return obj
-    
-    def get_success_url(self):
-        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
-
-class PetAdDeleteView(DeleteView):
-    model = PetAdvert
-    pk_url_kwarg = 'petad_pk'
-
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        return self.post(request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs): 
-        self.object = self.get_object() 
-        self.object.delete() 
-        return redirect(self.get_success_url())
-    
-    def get_success_url(self):
-        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
-    
-    def get_object(self, queryset = None):
-        obj =  super().get_object(queryset)
-        if obj.owner != self.request.user.profile:
-            raise Http404
-        return obj
     
     
 

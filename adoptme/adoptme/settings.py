@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     'userprofile.apps.UserprofileConfig',
-    'shelter.apps.ShelterConfig'
+    'shelter.apps.ShelterConfig',
+    'petadvert.apps.PetadvertConfig'
 ]
 
 MIDDLEWARE = [
