@@ -15,7 +15,44 @@
                 <div class="col-10 mx-auto">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form|crispy }}
+                        <div class="row">
+                            <div class="col-6">
+                                {{form.name|as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.photo|as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.color|as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.health|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.gender|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.type|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.size|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.age|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.breed|as_crispy_field}}
+                            </div>
+                            <div class="col-4">
+                                {{form.city|as_crispy_field}}
+                            </div>
+                            <div class="col-12">
+                                {{form.about|as_crispy_field}}
+                            </div>
+                            <div class="col">
+                                {{form.house_trained|as_crispy_field}}
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-success">Create Ad</button>
                         <p></p>
                     </form>

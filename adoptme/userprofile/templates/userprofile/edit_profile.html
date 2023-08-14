@@ -8,28 +8,33 @@
         {% csrf_token %}
     <div class="row">
         <div class="col-4 text-center">
-            <div class="card border-light shadow">
-                <p></p>
-                {% if not userprofile.profile_pic %}
-                <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
-                {% else %}
-                <p><img src="{{ userprofile.profile_pic.url }}" class="rounded-4 " alt="My image" style="width: 70%;"></p>
-                {% endif %}
-                <div class="text-center" style="width: 60%; margin: auto">
-                    {{ form.profile_pic|as_crispy_field }}
+            <div class="card rounded-4 border-light shadow">
+                <div class="mt-4 mb-4">
+                    <h1>Add a photo</h1>
+                    <br>
+                    {% if not userprofile.profile_pic %}
+                    <p><img src="{% static 'userprofile/images/profile1.png' %}" alt="My image" style="width:70%"></p>
+                    {% else %}
+                    <p><img  class="shadow rounded-4" src="{{ userprofile.profile_pic.url }}" class="rounded-4 " alt="My image" style="width: 70%;"></p>
+                    {% endif %}
+                    <div class="text-center" style="width: 60%; margin: auto">
+                        {{ form.profile_pic|as_crispy_field }}
+                    </div>
+                    
                 </div>
-                <p></p>
             </div>
         </div>
         <div class="col-6 text-start">
-            <div class="card border-light shadow">
-                <div  class="mx-auto">
-                    <p></p>
+            <div class="card rounded-4 border-light shadow">
+                <div class="mx-auto mt-4 mb-5">
+                    <div class="text-center">
+                        <h1>Edit information</h1>
+                        <br>
+                    </div>
                     <h1>{{userprofile.user.username}}</h1> 
                     <h5>{{ form.sex|as_crispy_field }}</h5>
                     {{ form.about|as_crispy_field }}
-                    <button type="submit" class="btn btn-success" style="width: 100%;">Save person</button>
-                    <p></p>
+                    <button type="submit" class="shadow-sm btn btn-outline-success" style="width: 100%;">Save person</button>
                 </div>
             </div>
         </div>

@@ -56,15 +56,69 @@
         </div>
     </div>
     <div class="container" style="margin-top: 40px;">
-        <div class="card shadow-sm border-light">
-            <div class="row">
-                <div class="col">
-                    <h1>{{petad.name}}</h1>
-                    <h3>Owner: <a href="{% url 'profile:profile' petad.owner.slug %}">{{petad.owner.user.username}}</a></h3>
-                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Add image
-                    </button>
-                    
+        <div class="row mb-5">
+            <div class="col-8">
+                <div class="card shadow border-light rounded-4">
+                    <div class="col-11 mx-auto" style="color: rgb(70, 65, 65);">
+                        <div class="row">
+                            <div class="col-10">
+                                <h1 class="mt-3">{{petad.name}}</h1>
+
+                            </div>
+                            <div class="col-2">
+                                {% if petad.owner == request.user.profile %}
+                                <button type="button" class="mt-4 btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    Add image
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h6 class="mt-4">{{petad.breed}} &nbsp; &#x2022; &nbsp; {{petad.city}}</h6>
+                        <hr class="mb-2 bg-danger border-1 border-top border-dark" />
+                        <h6 class="mt-4">{{petad.age}} years &nbsp; &#x2022; &nbsp; {{petad.get_gender_display}} &nbsp; &#x2022; &nbsp; {{petad.get_size_display}} &nbsp; &#x2022; &nbsp; {{petad.color}}</h6>
+                        <hr class="mt-4 bg-danger border-1 border-top border-dark" />
+                        <h3 class="mt-4" style="margin-bottom: 30px;">About</h3>
+                        <h4>Type</h4> 
+                        <h7>{{petad.get_type_display}}</h7>
+                        <h4 style="margin-top: 25px;">Health</h4> 
+                        <h7>{{petad.health}}</h7>
+                        <h4 style="margin-top: 25px;">House trained</h4> 
+                        <h7>{% if petad.house_trained %} Yes {% else %} No {% endif %}</h7>
+
+                        <hr class="mb-2 bg-danger border-1 border-top border-dark" style="margin-top: 50px;"/>
+                        <div class="row" style="margin-top: 20px; margin-bottom: 20px;">
+                            <div class="col-2 position-relative text-center">
+                                <div class="position-absolute top-50 start-50 translate-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                                  </svg>
+                                </div>
+                            </div>
+                            <div class="col-10">
+                                Before acquiring any new companion animal, it is absolutely essential to thoroughly research the care the animal will need to ensure you have the capacity to meet the physiological, behavioural and social needs of the animal.
+                            </div>
+                        </div>
+                        <hr class="mb-2 bg-danger border-1 border-top border-dark"/>
+                        <h3 class="mt-5 mb-3" style="margin-bottom: 20px;">Meet {{petad.name}}</h3>
+                        {{petad.about}}
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="card mb-3 shadow-lg rounded-4" style="background-color: rgb(236, 138, 26); border-color: rgb(236, 138, 26); color: white;">
+                    <div class="card-body">
+                      <h2 style="margin-top: 20px;" class="card-title mx-auto">Considering {{petad.name}} for adoption?</h2>
+                      <div class="row" style="margin-top: 35px;">
+                        <div class="col-10 mx-auto">
+                            <button class="btn btn-light shadow" style="width: 100%; color: rgb(236, 138, 26); margin-bottom: 35px;"><h5>START YOUR INQUIRY</h5></button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    <!-- modal -->
                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -88,13 +142,6 @@
                         </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row" style="height: 600px;">
-                <div class="col">
-                    
-                </div>
-            </div>
-        </div>
+                    <!-- endmodal-->
     </div>
 {% endblock %}

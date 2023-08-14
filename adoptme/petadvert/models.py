@@ -19,6 +19,7 @@ class PetAdvert(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner')
     name = models.CharField(max_length=30)
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/")
+    color = models.CharField(max_length=30)
     about = models.TextField(blank=True)
     gender = models.CharField(max_length=1, choices=SexChoices.choices, default=SexChoices.MALE)
     type = models.CharField(max_length=3, choices=TypeChoices.choices, default=TypeChoices.CAT)
@@ -29,7 +30,10 @@ class PetAdvert(models.Model):
             MaxValueValidator(100),
             MinValueValidator(1)
         ])
-    breed = models.CharField(max_length=100)
+    house_trained = models.BooleanField()
+    health = models.CharField(max_length=150)
+    breed = models.CharField(max_length=150)
+    city = models.CharField(max_length=100)
     
 class PetAdvertPhoto(models.Model):
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/")

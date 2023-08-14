@@ -11,13 +11,18 @@ class PetAdvertForm(FormSquarePhotoMixin, forms.ModelForm):
         fields = [
             'name',
             'photo',
-            'about',
+            'color',
+            'health',
             'gender',
             'type',
             'size',
             'age',
-            'breed'
+            'breed',
+            'city',
+            'about',
+            'house_trained',
         ]
+
 
 class PetAdvertPhotoForm(FormSquarePhotoMixin, forms.ModelForm):
     photo = forms.ImageField(widget=forms.widgets.FileInput)
