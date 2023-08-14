@@ -1,30 +1,21 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, View, CreateView, DeleteView, DetailView
+from django.shortcuts import redirect
+from django.views.generic import ListView, CreateView, DeleteView, DetailView
 from .models import Shelter, ShelterProfile
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import Http404, HttpRequest
 from pytils.translit import slugify
 
-class SheltersView(ListView):
+class SheltersView(LoginRequiredMixin, ListView):
     model = ShelterProfile
     template_name = 'shelter/shelters.html'
     context_object_name = 'shelters'
     
     def get_queryset(self):
         return self.request.user.profile.profile.all()
+
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['petads'] = PetAdvert.objects.filter(owner=kwargs['object']).order_by(self.request.GET.get('ordering_type') or 'name')
-    #     print(self.request)
-    #     return context
-    # наверное в View нет этого метода, используй ListView
-    
-class ShelterCreateView(CreateView):
+class ShelterCreateView(LoginRequiredMixin, CreateView):
     model = Shelter
     template_name = 'shelter/shelter_create.html'
     fields = [
@@ -40,11 +31,11 @@ class ShelterCreateView(CreateView):
         return redirect(reverse_lazy('shelter:shelters'))
     
 
-class ShelterDeleteView(DeleteView):
+class ShelterDeleteView(LoginRequiredMixin, DeleteView):
     model = Shelter
     pk_url_kwarg = 'shelter_pk'
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any):
+    def get(self, request: HttpRequest, *args, **kwargs):
         return self.post(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs): 

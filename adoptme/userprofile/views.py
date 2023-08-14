@@ -51,14 +51,10 @@ class ProfileView(LoginRequiredMixin, DetailView):
         print(self.request)
         return context
 
-    # def test_func(self):
-    #     return self.request.user.username == Profile.objects.get(slug=self.request.GET.get('profile_slug'))
-
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     context_object_name = 'userprofile'
     form_class = ProfileUpdateForm
-    slug_url_kwarg = 'profile_slug'
     template_name = "userprofile/edit_profile.html"
 
     def get_object(self, queryset=None):

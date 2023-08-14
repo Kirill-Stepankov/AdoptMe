@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from .forms import PetAdvertForm, PetAdvertPhotoForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404
 
 
 
@@ -51,7 +51,7 @@ class PetAdDetailView(FormMixin, DetailView):
         form.save()
         return super(PetAdDetailView, self).form_valid(form)
 
-class PetAdUpdateView(UpdateView):
+class PetAdUpdateView(LoginRequiredMixin, UpdateView):
     model = PetAdvert
     pk_url_kwarg = 'petad_pk'
     context_object_name = 'petad'
@@ -67,7 +67,7 @@ class PetAdUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
 
-class PetAdDeleteView(DeleteView):
+class PetAdDeleteView(LoginRequiredMixin, DeleteView):
     model = PetAdvert
     pk_url_kwarg = 'petad_pk'
 

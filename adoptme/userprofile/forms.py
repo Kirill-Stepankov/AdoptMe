@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Profile
 from django.core.files.images import get_image_dimensions
+from userprofile.utils import FormSquarePhotoMixin
 
 
 class RegisterForm(UserCreationForm):
@@ -28,7 +29,7 @@ class LoginForm(AuthenticationForm):
             'password'
         ]
 
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileUpdateForm(FormSquarePhotoMixin, forms.ModelForm):
     profile_pic = forms.ImageField(widget=forms.widgets.FileInput)
     class Meta:
         model = Profile
@@ -37,13 +38,3 @@ class ProfileUpdateForm(forms.ModelForm):
             'profile_pic',
             'about'
         ]
-    
-    def clean_profile_pic(self):
-       picture = self.cleaned_data.get("profile_pic")
-       if not picture:
-           raise forms.ValidationError("No image!")
-       else:
-           w, h = get_image_dimensions(picture)
-           if w != h:
-               raise forms.ValidationError("The image must be square")
-       return picture
