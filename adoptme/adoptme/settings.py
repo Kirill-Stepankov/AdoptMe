@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'userprofile.apps.UserprofileConfig',
     'shelter.apps.ShelterConfig',
-    'petadvert.apps.PetadvertConfig'
+    'petadvert.apps.PetadvertConfig',
+    # 'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +87,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'giss',
+#         'USER': 'user001',
+#         'PASSWORD': '123456789',
+#         'HOST': 'localhost',
+#         'PORT': '5433'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -1,3 +1,4 @@
+# from django.contrib.gis.db import models
 from django.db import models
 from userprofile.models import Profile
 
@@ -5,7 +6,7 @@ class Shelter(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL") 
     name = models.CharField(max_length=50, unique=True)
     main_photo = models.ImageField(upload_to="photos/%Y/%m/%d/")
-    #location = 
+    # location = models.PointField()
     email = models.EmailField(unique=True)
     about = models.TextField()
     #phone_number = models.

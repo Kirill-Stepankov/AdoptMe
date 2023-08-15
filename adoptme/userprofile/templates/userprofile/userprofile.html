@@ -1,6 +1,7 @@
 {% extends 'userprofile/common/base.html' %}
 {% load static %}
-
+{% load paginate_tags %}
+{% load utils_tags %}
 {% block content %}
 <div class="container text-center" style="margin-top: 40px;">
     <div class="row">
@@ -82,23 +83,35 @@
                 </ul>
               </nav>
               {% for ad in petads %}
-              <div class="card border-light shadow" style="margin-bottom: 20px;">
+              <div class="card rounded-4 border-light shadow" style="margin-bottom: 20px;">
                 <div class="row" style="margin-top: 20px; margin-bottom: 20px; margin-right: 20px; color: rgb(70, 65, 65);">
                     <div class="col-4 text-center">
                         <img class="rounded shadow" src="{{ad.photo.url}}" alt="PetAdvert" style="width: 70%;">
                     </div>
                     <div class="col-6 text-start">
-                        <a href="{% url 'petad:petad_detail' ad.pk %}" class="link-warning link-underline-opacity-25" style="color: rgb(223, 126, 15);"><h1>{{ad.name}}</h1></a>
+                        <div class="row">
+                            <div class="col-7">
+                                <a href="{% url 'petad:petad_detail' ad.pk %}" class="link-warning link-underline-opacity-25" style="color: rgb(223, 126, 15);"><h1>{{ad.name}}</h1></a>
+                            </div>
+                            <div class="col-5 position-relative text-end">
+                                <div class="position-absolute top-50 start-0 translate-middle-y" style="color: rgb(163, 163, 163);">
+                                    <small>{{ad.time_update|timesince}} ago</small>
+                                </div>
+                            </div>
+                        </div>
                         <p>{{ad.about|linebreaks|truncatechars:210}}</p>
+                        d
+                        {{ordering_type}}
+              {{register.kwargs}}dd
                     </div>
                     <div class="col-2 d-flex align-items-center">
                         <span class="align-middle">
                             <a href="{% url 'petad:petad_detail' ad.pk %}" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;">More info</a>
                             {% if ad.owner == request.user.profile %}
-                            <a href="{% url 'petad:petad_update' ad.pk %}" class="btn shadow btn-outline-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
+                            <a href="{% url 'petad:petad_update' ad.pk %}" class="btn shadow-sm btn-outline-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
                             <form method="POST" action="{% url 'petad:petad_delete' ad.pk %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn shadow btn-outline-danger" style="width: 100%; margin-bottom: 10px;">Delete</button>
+                                <button type="submit" class="btn shadow-sm btn-outline-danger" style="width: 100%; margin-bottom: 10px;">Delete</button>
                              </form>
                             {% endif %}
                         </span>
@@ -106,6 +119,29 @@
                 </div>
               </div>
               {% endfor %}
+              {% get_GET_value request 'ordering_type' as ordering_type %}
+              <div class="row mt-5">
+                <div class="col-10 mx-auto text-center">
+                    {% if page_obj.has_previous %}
+                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.previous_page_number}}&ordering_type={{ordering_type}}">
+                            Previous Page
+                        </a>
+                    {% endif%}
+                    {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                    {% for page_number in page_range %}
+                        {% if page_number == page_obj.paginator.ELLIPSIS %}
+                            {{page_number}}
+                        {% else %}
+                            <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_number}}&ordering_type={{ordering_type}}" class="{% if page_number == page_obj.number %}current{% endif %}">{{page_number}}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.next_page_number}}&ordering_type={{ordering_type}}">
+                            Next Page
+                        </a>
+                    {% endif%}
+                </div>
+              </div>
         </div>
     </div>
 </div>

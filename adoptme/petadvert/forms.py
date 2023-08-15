@@ -4,7 +4,7 @@ from django.core.files.images import get_image_dimensions
 from userprofile.utils import FormSquarePhotoMixin
 
 
-class PetAdvertForm(FormSquarePhotoMixin, forms.ModelForm):
+class PetAdvertForm(forms.ModelForm):
     photo = forms.ImageField(widget=forms.widgets.FileInput)
     class Meta:
         model = PetAdvert
@@ -24,7 +24,7 @@ class PetAdvertForm(FormSquarePhotoMixin, forms.ModelForm):
         ]
 
 
-class PetAdvertPhotoForm(FormSquarePhotoMixin, forms.ModelForm):
+class PetAdvertPhotoForm(forms.ModelForm):
     photo = forms.ImageField(widget=forms.widgets.FileInput)
 
     class Meta:

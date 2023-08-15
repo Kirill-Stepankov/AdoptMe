@@ -8,4 +8,5 @@ adoptme/media
 adoptme/shelter/__pycache__
 adoptme/shelter/migrations
 adoptme/petadvert/__pycache__
+adoptme/userprofile/templatetags/__pycache__/
 adoptme/petadvert/migrations

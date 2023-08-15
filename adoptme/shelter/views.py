@@ -22,7 +22,7 @@ class ShelterCreateView(LoginRequiredMixin, CreateView):
         'name',
         'main_photo',
         'email',
-        'about'
+        'about',
     ]
 
     def form_valid(self, form):
