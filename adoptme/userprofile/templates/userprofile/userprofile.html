@@ -3,7 +3,7 @@
 {% load paginate_tags %}
 {% load utils_tags %}
 {% block content %}
-<div class="container text-center" style="margin-top: 40px;">
+<div class="container text-center" style="margin-top: 40px; margin-bottom: 40px;">
     <div class="row">
 
         <div class="col-4 text-start">
@@ -36,35 +36,74 @@
                   <span class="navbar-brand mb-0 h1 ms-4" style="margin-left: 10px; color: rgb(70, 65, 65);">Ads:</span>
                   <ul class="nav navbar-nav ms-auto d-flex me-4 align-items-center">
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                        {% get_GET_value request 'ordering_type' as ordering %}
                         <a class="btn dropdown-toggle shadow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgb(238, 155, 60); color: white;">Type</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Sitter Ad</a></li>
-                            <li><a class="dropdown-item" href="{% url 'petad:create_petad' %}">Pet Ad</a></li>
+                            <li>
+                                <form method="GET">
+                                    {% if ordering %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="{{ordering}}"/>
+                                    {% endif %}                                    
+                                    <input type="hidden" id="ad_type" name="ad_type" value="All"/>
+                                    <button type='submit' class="btn btn-dark dropdown-item">All</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="GET">
+                                    {% if ordering %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="{{ordering}}"/>
+                                    {% endif %}                                    
+                                    <input type="hidden" id="ad_type" name="ad_type" value="SIT"/>
+                                    <button type='submit' class="btn btn-dark dropdown-item">Sitter Ad</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form method="GET">
+                                    {% if ordering %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="{{ordering}}"/>
+                                    {% endif %}  
+                                    <input type="hidden" id="ad_type" name="ad_type" value="PET" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Pet Ad</button>
+                                </form>
+                            </li>
                           </ul>
                     </li>
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
                         <a class="btn btn-dark dropdown-toggle shadow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Filter</a>
+                        {% get_GET_value request 'ad_type' as ad_type %}
                         <ul class="dropdown-menu">
                             <li>
                                 <form method="GET">
-                                    <input type="hidden" id="ordering_type" name="ordering_type" value="time_create" />
+                                    {% if ad_type %}
+                                    <input type="hidden" id="ad_type" name="ad_type" value="{{ad_type}}"/>
+                                    {% endif %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="time_update" />
                                     <button type='submit' class="btn btn-dark dropdown-item">Date Created +</button>
                                 </form>
                             </li>
                             <li>
                                 <form method="GET">
-                                    <input type="hidden" id="ordering_type" name="ordering_type" value="-time_create" />
+                                    {% if ad_type %}
+                                    <input type="hidden" id="ad_type" name="ad_type" value="{{ad_type}}"/>
+                                    {% endif %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="-time_update" />
                                     <button type='submit' class="btn btn-dark dropdown-item">Data Created -</button>
                                 </form>
                             </li>
                             <li>
                                 <form method="GET">
+                                    {% if ad_type %}
+                                    <input type="hidden" id="ad_type" name="ad_type" value="{{ad_type}}"/>
+                                    {% endif %}
                                     <input type="hidden" id="ordering_type" name="ordering_type" value="name" />
                                     <button type='submit' class="btn btn-dark dropdown-item">Name +</button>
                                 </form>
                             </li>
                             <li>
                                 <form method="GET">
+                                    {% if ad_type %}
+                                    <input type="hidden" id="ad_type" name="ad_type" value="{{ad_type}}"/>
+                                    {% endif %}
                                     <input type="hidden" id="ordering_type" name="ordering_type" value="-name" />
                                     <button type='submit' class="btn btn-dark dropdown-item">Name -</button>
                                 </form>
@@ -75,7 +114,7 @@
                     <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
                         <a class="btn dropdown-toggle shadow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgb(69, 167, 77); color: white;">Create</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'profile:profile' request.user.profile.slug %}">Sitter Ad</a></li>
+                            <li><a class="dropdown-item" href="{% url 'petad:create_sitterad' %}">Sitter Ad</a></li>
                             <li><a class="dropdown-item" href="{% url 'petad:create_petad' %}">Pet Ad</a></li>
                           </ul>
                     </li>
@@ -83,6 +122,7 @@
                 </ul>
               </nav>
               {% for ad in petads %}
+              {% if ad.ad_type == ad.AdvertType.PET %}
               <div class="card rounded-4 border-light shadow" style="margin-bottom: 20px;">
                 <div class="row" style="margin-top: 20px; margin-bottom: 20px; margin-right: 20px; color: rgb(70, 65, 65);">
                     <div class="col-4 text-center">
@@ -100,9 +140,6 @@
                             </div>
                         </div>
                         <p>{{ad.about|linebreaks|truncatechars:210}}</p>
-                        d
-                        {{ordering_type}}
-              {{register.kwargs}}dd
                     </div>
                     <div class="col-2 d-flex align-items-center">
                         <span class="align-middle">
@@ -118,12 +155,82 @@
                     </div>
                 </div>
               </div>
+              {% else %}
+              <div class="card rounded-4 border-light shadow" style="margin-bottom: 20px;">
+                <div class="row" style="margin-top: 20px; margin-bottom: 20px; margin-right: 20px; margin-left: 20px; color: rgb(70, 65, 65);">
+                    <div class="col-10 text-start">
+                        <div class="ms-2 row">
+                            <div class="col-5">
+                                <h1 style="color: rgb(238, 155, 60);">Sitter Advert</h1>
+                            </div>
+                            <div class="col-7 text-end">
+                                <div style="color: rgb(163, 163, 163);">
+                                    <small>{{ad.time_update|timesince}} ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <p>Salary: ${{ad.salary}}</p>
+                                <p>City: {{ad.city}}</p>
+                                <p>Experience: {{ad.experience}} years</p>
+                            </div>
+                            <div class="col-9">
+                                <h7>Content:</h7>
+                                <p>{{ad.content|truncatechars:210}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="align-middle">
+                            <button type="button" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                More info
+                            </button>
+                            <a href="#" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;">Contact</a>
+                            {% if ad.owner == request.user.profile %}
+                            <a href="{% url 'petad:sitterad_update' ad.pk %}" class="btn shadow-sm btn-outline-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
+                            <form method="POST" action="{% url 'petad:petad_delete' ad.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn shadow-sm btn-outline-danger" style="width: 100%; margin-bottom: 10px;">Delete</button>
+                             </form>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+              </div>
+              <!-- modal -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Information</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        <div class="modal-body">
+                            <p>Salary: ${{ad.salary}}</p>
+                            <p>City: {{ad.city}}</p>
+                            <p>Experience: {{ad.experience}} years</p>
+                            <p>Content: {{ad.content}}</p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <div class="mx-auto">
+                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-success">Contact</button>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+            <!-- endmodal-->
+              {% endif %}
               {% endfor %}
               {% get_GET_value request 'ordering_type' as ordering_type %}
+              {% get_GET_value request 'ad_type' as advert_type %}
               <div class="row mt-5">
                 <div class="col-10 mx-auto text-center">
                     {% if page_obj.has_previous %}
-                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.previous_page_number}}&ordering_type={{ordering_type}}">
+                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.previous_page_number}}{% if ordering_type %}&ordering_type={{ordering_type}}{% endif %}{% if advert_type %}&ad_type={{advert_type}}{% endif %}">
                             Previous Page
                         </a>
                     {% endif%}
@@ -132,11 +239,11 @@
                         {% if page_number == page_obj.paginator.ELLIPSIS %}
                             {{page_number}}
                         {% else %}
-                            <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_number}}&ordering_type={{ordering_type}}" class="{% if page_number == page_obj.number %}current{% endif %}">{{page_number}}</a>
+                            <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_number}}{% if ordering_type %}&ordering_type={{ordering_type}}{% endif %}{% if advert_type %}&ad_type={{advert_type}}{% endif %}" class="{% if page_number == page_obj.number %}current{% endif %}">{{page_number}}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.next_page_number}}&ordering_type={{ordering_type}}">
+                        <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'profile:profile' profile_slug=userprofile.slug %}?page={{page_obj.next_page_number}}{% if ordering_type %}&ordering_type={{ordering_type}}{% endif %}{% if advert_type %}&ad_type={{advert_type}}{% endif %}">
                             Next Page
                         </a>
                     {% endif%}

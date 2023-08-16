@@ -1,5 +1,5 @@
 from django.urls import path 
-from .views import CreatePetAdView, PetAdDetailView, PetAdUpdateView, PetAdDeleteView
+from .views import CreatePetAdView, PetAdDetailView, PetAdUpdateView, PetAdDeleteView, CreateSitterAdView, SitterAdUpdateView
 
 app_name = "petad"
 urlpatterns = [
@@ -7,4 +7,6 @@ urlpatterns = [
     path('detail/<int:petad_pk>', PetAdDetailView.as_view(), name='petad_detail'),
     path('edit/<int:petad_pk>', PetAdUpdateView.as_view(), name='petad_update'),
     path('delete/<int:petad_pk>', PetAdDeleteView.as_view(), name='petad_delete'),
+    path('create/sitterad', CreateSitterAdView.as_view(), name='create_sitterad'),
+    path('edit/sitterad/<int:sitterad_pk>', SitterAdUpdateView.as_view(), name='sitterad_update'),
 ]

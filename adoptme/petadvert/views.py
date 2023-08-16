@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import PetAdvert, PetAdvertPhoto
+from .models import PetAdvert, PetAdvertPhoto, SitterAd
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
@@ -9,14 +9,30 @@ from django.views.generic.edit import FormMixin
 from django.http import Http404
 
 
-
 class CreatePetAdView(LoginRequiredMixin, CreateView):
     model = PetAdvert
     form_class = PetAdvertForm
     template_name = "petadvert/create_pet_ad.html"
 
     def form_valid(self, form):
-        PetAdvert.objects.create(owner=self.request.user.profile, **form.cleaned_data)
+        PetAdvert.objects.create(ad_type=PetAdvert.AdvertType.PET, owner=self.request.user.profile)
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
+    
+class CreateSitterAdView(LoginRequiredMixin, CreateView):
+    model = PetAdvert
+    template_name = 'petadvert/create_sitterad.html'
+    fields = [
+        'content',
+        'salary',
+        'city',
+        'experience'
+    ]
+
+    def form_valid(self, form):
+        PetAdvert.objects.create(ad_type=PetAdvert.AdvertType.SITTER, owner=self.request.user.profile, name=form.cleaned_data['city'], **form.cleaned_data)
         return redirect(self.get_success_url())
     
     def get_success_url(self):
@@ -56,7 +72,29 @@ class PetAdUpdateView(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'petad_pk'
     context_object_name = 'petad'
     form_class = PetAdvertForm
-    template_name = 'petadvert/petad_edit.html'
+    template_name = 'petadvert/create_pet_ad.html'
+
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        if obj.owner != self.request.user.profile:
+            raise Http404
+        return obj
+    
+    def get_success_url(self):
+        return reverse_lazy('profile:profile', kwargs={'profile_slug': self.request.user.profile.slug})
+    
+
+class SitterAdUpdateView(LoginRequiredMixin, UpdateView):
+    model = PetAdvert
+    pk_url_kwarg = 'sitterad_pk'
+    context_object_name = 'sitterad'
+    template_name = 'petadvert/create_sitterad.html'
+    fields = [
+        'content',
+        'city',
+        'salary',
+        'experience'
+    ]
 
     def get_object(self, queryset = None):
         obj =  super().get_object(queryset)

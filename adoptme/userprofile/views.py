@@ -53,7 +53,10 @@ class ProfileView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug']).order_by(self.request.GET.get('ordering_type') or 'name')
+        if not self.request.GET.get('ad_type') or self.request.GET.get('ad_type') == 'All':
+            return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug']).order_by(self.request.GET.get('ordering_type') or '-time_update')
+        return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug'], ad_type=self.request.GET.get('ad_type')).order_by(self.request.GET.get('ordering_type') or '-time_update')            
+
     
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
