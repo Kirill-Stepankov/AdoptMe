@@ -111,7 +111,7 @@
                       <h2 style="margin-top: 20px;" class="card-title mx-auto">Considering {{petad.name}} for adoption?</h2>
                       <div class="row" style="margin-top: 35px;">
                         <div class="col-10 mx-auto">
-                            <button class="btn btn-light shadow" style="width: 100%; color: rgb(236, 138, 26); margin-bottom: 35px;"><h5>START YOUR INQUIRY</h5></button>
+                            <button class="btn btn-light shadow" style="width: 100%; color: rgb(236, 138, 26); margin-bottom: 35px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop2"><h5>START YOUR INQUIRY</h5></button>
                         </div>
                       </div>
                     </div>
@@ -139,6 +139,61 @@
                                 </div>
                             </form>
 
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                                <div class="modal-body">
+                                    <div class="row mx-auto mt-4 mb-3" style="width: 60%;">
+                                        <button class="btn" style="background-color: rgb(238, 155, 60); color: white;" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Contact via Mail</button>
+                                    </div>
+                                    <div class="row mx-auto mb-4" style="width: 60%">
+                                        <button class="btn btn-primary" disabled>Contact via Messages</button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="mx-auto">
+                                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" style="width: 100%;">Close</button>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form method="post">
+                            <div class="modal-body">
+                                  {% csrf_token %}
+                                  <input type="hidden" id="ad_id" name="ad_id" value="{{petad.id}}"/>
+                                  <div class="mb-3">
+                                    <label for="recipient-name" class="col-form-label">Your email:</label>
+                                    <input type="text" name="reciever" class="form-control" id="recipient-name">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="message-text" class="col-form-label">Message:</label>
+                                    <textarea name="content" class="form-control" id="message-text"></textarea>
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                <div class="mx-auto">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn" style="background-color: rgb(238, 155, 60); color: white;">Send message</button>
+                                </div>
+                              </div>
+                            </form>
                         </div>
                         </div>
                     </div>

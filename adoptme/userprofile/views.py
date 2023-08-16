@@ -18,6 +18,9 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import Q
 from petadvert.models import PetAdvert
+from django.views.generic.edit import FormMixin
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 @method_decorator(unauthenticated_user, name='dispatch')
@@ -55,9 +58,32 @@ class ProfileView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if not self.request.GET.get('ad_type') or self.request.GET.get('ad_type') == 'All':
             return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug']).order_by(self.request.GET.get('ordering_type') or '-time_update')
-        return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug'], ad_type=self.request.GET.get('ad_type')).order_by(self.request.GET.get('ordering_type') or '-time_update')            
+        return PetAdvert.objects.filter(owner__slug=self.kwargs['profile_slug'], ad_type=self.request.GET.get('ad_type')).order_by(self.request.GET.get('ordering_type') or '-time_update')
 
-    
+
+    # очень кринж
+    def post(self, request, *args, **kwargs):
+        ad = PetAdvert.objects.get(pk=self.request.POST['ad_id'])
+        if ad.ad_type == ad.AdvertType.PET:
+            detail_link = 'http://localhost:8000'+reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.request.POST['ad_id']})+'\n'
+        else:
+            detail_link = 'http://localhost:8000'+reverse_lazy('profile:profile', kwargs={'profile_slug': ad.owner.slug})+'\n'
+        send_mail(
+            ad,
+            detail_link+self.request.POST['content'],
+            settings.EMAIL_HOST_USER,
+            [self.request.POST['reciever']]
+        )
+
+        if ad.ad_type == ad.AdvertType.PET:
+            return redirect(reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.request.POST['ad_id']}))
+        get_params = ''
+        for k in self.request.GET:
+            get_params += str(k)+'='+str(self.request.GET[k])+'&'
+        if get_params:
+            return redirect(str(reverse_lazy('profile:profile', kwargs={'profile_slug': self.kwargs['profile_slug']}))+'?'+get_params[:-1])
+        return redirect(reverse_lazy('profile:profile', kwargs={'profile_slug': self.kwargs['profile_slug']}))
+
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     context_object_name = 'userprofile'

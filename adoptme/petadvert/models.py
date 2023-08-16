@@ -56,7 +56,7 @@ class PetAdvert(models.Model):
     def __str__(self):
         if self.name:
             return self.name
-        return str(self.owner) + " -- $" + str(self.salary)
+        return str(self.owner) + ": $" + str(self.salary)
 
 
     

@@ -10,3 +10,4 @@ adoptme/shelter/migrations
 adoptme/petadvert/__pycache__
 adoptme/userprofile/templatetags/__pycache__/
 adoptme/petadvert/migrations
+adoptme/adoptme/.env

@@ -1,3 +1,5 @@
+from typing import Any, Optional
+from django.db import models
 from django.shortcuts import render
 from .models import PetAdvert, PetAdvertPhoto, SitterAd
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
@@ -7,7 +9,8 @@ from .forms import PetAdvertForm, PetAdvertPhotoForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
 from django.http import Http404
-
+from django.core.mail import send_mail
+from userprofile.views import ProfileView
 
 class CreatePetAdView(LoginRequiredMixin, CreateView):
     model = PetAdvert
@@ -51,11 +54,19 @@ class PetAdDetailView(FormMixin, DetailView):
         form = PetAdvertPhotoForm()
         context['form'] = form
         return context
+    
+    def get_object(self, queryset=None):
+        ad = super().get_object(queryset)
+        if ad.ad_type == PetAdvert.AdvertType.SITTER:
+            raise Http404
+        return super().get_object(queryset)
 
     def get_success_url(self):
         return reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.kwargs['petad_pk']})
     
     def post(self, request, *args, **kwargs):
+        if self.request.POST['ad_id']:
+            return ProfileView.post(self, request, *args, **kwargs)
         self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():

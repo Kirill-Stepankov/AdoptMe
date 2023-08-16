@@ -186,7 +186,7 @@
                             <button type="button" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 More info
                             </button>
-                            <a href="#" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;">Contact</a>
+                            <a href="#" class="btn shadow" style="width: 100%; margin-bottom: 10px; background-color: rgb(238, 155, 60); color: white;" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Contact</a>
                             {% if ad.owner == request.user.profile %}
                             <a href="{% url 'petad:sitterad_update' ad.pk %}" class="btn shadow-sm btn-outline-success" style="width: 100%; margin-bottom: 10px;">Edit</a>
                             <form method="POST" action="{% url 'petad:petad_delete' ad.pk %}">
@@ -199,7 +199,31 @@
                 </div>
               </div>
               <!-- modal -->
-              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                        <div class="modal-body">
+                            <div class="row mx-auto mt-4 mb-3" style="width: 60%;">
+                                <button class="btn" style="background-color: rgb(238, 155, 60); color: white;" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Contact via Mail</button>
+                            </div>
+                            <div class="row mx-auto mb-4" style="width: 60%">
+                                <button class="btn btn-primary" disabled>Contact via Messages</button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="mx-auto">
+                                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" style="width: 100%;">Close</button>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -216,9 +240,40 @@
                         <div class="modal-footer">
                             <div class="mx-auto">
                                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-outline-success">Contact</button>
+                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Contact</button>
                             </div>
                         </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Contact</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post">
+                    <div class="modal-body">
+                          {% csrf_token %}
+                          <input type="hidden" id="ad_id" name="ad_id" value="{{ad.id}}"/>
+                          <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Your email:</label>
+                            <input type="text" name="reciever" class="form-control" id="recipient-name">
+                          </div>
+                          <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea name="content" class="form-control" id="message-text"></textarea>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn" style="background-color: rgb(238, 155, 60); color: white;">Send message</button>
+                        </div>
+                      </div>
+                    </form>
                 </div>
                 </div>
             </div>
