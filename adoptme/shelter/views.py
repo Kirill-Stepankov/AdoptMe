@@ -105,3 +105,29 @@ class ShelterApplyView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('shelter:detail', kwargs={'shelter_slug': self.kwargs['shelter_slug']})
+    
+class ShelterLeaveView(LoginRequiredMixin, DeleteView):
+    model = Shelter
+    pk_url_kwarg = 'shelter_pk'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        shelter = self.object
+        shelterprofile = shelter.shelter.filter(profile=request.user.profile) 
+        shelterprofile.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:shelters')
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        shelterprofile = obj.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        if shelterprofile.role != ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        return obj

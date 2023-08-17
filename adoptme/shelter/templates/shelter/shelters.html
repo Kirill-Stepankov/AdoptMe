@@ -1,4 +1,6 @@
 {% extends 'userprofile/common/base.html' %}
+{% load utils_shel_tags %}
+
 
 {% block content %}
     <div class="container" style="margin-top: 40px;">
@@ -30,10 +32,18 @@
                                 <a class="btn btn-outline-success">Settings</a>
                             </div>
                             <div class="col-2">
+                                {% is_shelter_admin shelter.shelter request as is_admin %}
+                                {% if is_admin  %}
                                 <form method="post" action="{% url 'shelter:delete' shelter.shelter.id %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger">Delete</button>
                                 </form>
+                                {% else %}
+                                <form method="post" action="{% url 'shelter:leave' shelter.shelter.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">Leave</button>
+                                </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
