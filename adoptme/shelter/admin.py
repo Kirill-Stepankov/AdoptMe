@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Shelter, ShelterPhoto, ShelterProfile
+from .models import Shelter, ShelterPhoto, ShelterProfile, ShelterApply
 # from django.contrib.gis.admin import OSMGeoAdmin
 
 
@@ -10,3 +10,4 @@ from .models import Shelter, ShelterPhoto, ShelterProfile
 admin.site.register(Shelter)
 admin.site.register(ShelterPhoto)
 admin.site.register(ShelterProfile)
+admin.site.register(ShelterApply)

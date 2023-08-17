@@ -70,9 +70,9 @@ class ProfileView(LoginRequiredMixin, ListView):
             detail_link = 'http://localhost:8000'+reverse_lazy('profile:profile', kwargs={'profile_slug': ad.owner.slug})+'\n'
         send_mail(
             ad,
-            detail_link+self.request.POST['content'],
+            'From: '+self.request.POST['reciever']+'\n'+detail_link+self.request.POST['content'],
             settings.EMAIL_HOST_USER,
-            [self.request.POST['reciever']]
+            [ad.owner.user.email]
         )
 
         if ad.ad_type == ad.AdvertType.PET:

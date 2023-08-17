@@ -78,7 +78,7 @@ class PetAdDetailView(FormMixin, DetailView):
         form.save()
         return super(PetAdDetailView, self).form_valid(form)
 
-class PetAdUpdateView(LoginRequiredMixin, UpdateView):
+class PetAdUpdateView(LoginRequiredMixin, UpdateView):  
     model = PetAdvert
     pk_url_kwarg = 'petad_pk'
     context_object_name = 'petad'
