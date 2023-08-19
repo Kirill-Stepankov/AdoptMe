@@ -254,3 +254,67 @@ class ShelterDeleteModView(LoginRequiredMixin, DeleteView):
         if shelterprofile.profile == get_object_or_404(Profile, pk=self.kwargs['mod_pk']):
             raise Http404
         return obj
+    
+class ShelterApplicationsView(LoginRequiredMixin, ListView):
+    model = ShelterApply
+    template_name = 'shelter/shelter_applies.html'
+    context_object_name = 'applies'
+    paginate_by = 1
+
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['membership_active'] = True
+        context['shelter'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        return context
+    
+    def get_queryset(self):
+        return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']))
+    
+class AcceptApplyView(LoginRequiredMixin, DeleteView):
+    model = ShelterApply
+    pk_url_kwarg = 'apply_pk'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        ShelterProfile.objects.create(shelter=self.object.shelter, profile=self.object.profile, role=ShelterProfile.RoleChoices.MODERATOR)
+        self.object.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:appls_mods', kwargs={'shelter_slug': self.object.shelter.slug})
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        shelterprofile = obj.shelter.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        return obj   
+    
+class DenyApplyView(LoginRequiredMixin, DeleteView):
+    model = ShelterApply
+    pk_url_kwarg = 'apply_pk'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        self.object.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:appls_mods', kwargs={'shelter_slug': self.object.shelter.slug})
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        shelterprofile = obj.shelter.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        return obj   
