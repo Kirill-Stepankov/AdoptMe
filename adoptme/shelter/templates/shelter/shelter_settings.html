@@ -1,0 +1,16 @@
+{% extends 'shelter/shelter_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block action_name %}
+    Change informaion
+{% endblock %}
+
+
+{% block second_card %}
+    <form method="post">
+        {% csrf_token %}    
+        {{form|crispy}}
+        <button class="btn btn-outline-success" style="width: 100%;" type="submit">Save</button>
+    </form>
+{% endblock %}

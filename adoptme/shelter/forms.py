@@ -36,11 +36,3 @@ class ShelterApplyForm(forms.ModelForm):
             'shelter'
         ]
         widgets = {'shelter': forms.HiddenInput(), 'profile': forms.HiddenInput()}
-    
-    def clean_profile(self):
-        profile = self.cleaned_data.get('profile')
-        if ShelterApply.objects.filter(profile=profile).first():
-            raise forms.ValidationError('There is applying from you already')
-        if profile.profile.filter(shelter__id=self.cleaned_data.get('shelter')):
-            raise forms.ValidationError("It's your shelter")
-        return profile

@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 from django.db import models
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView, View, DetailView, UpdateView, DeleteView, ListView
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
@@ -52,7 +52,7 @@ class ProfileView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['userprofile'] = Profile.objects.get(slug=self.kwargs['profile_slug'])
+        context['userprofile'] = get_object_or_404(Profile, slug=self.kwargs['profile_slug'])
         return context
 
     def get_queryset(self):
@@ -63,7 +63,7 @@ class ProfileView(LoginRequiredMixin, ListView):
 
     # очень кринж
     def post(self, request, *args, **kwargs):
-        ad = PetAdvert.objects.get(pk=self.request.POST['ad_id'])
+        ad = get_object_or_404(PetAdvert, pk=self.request.POST['ad_id'])
         if ad.ad_type == ad.AdvertType.PET:
             detail_link = 'http://localhost:8000'+reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.request.POST['ad_id']})+'\n'
         else:

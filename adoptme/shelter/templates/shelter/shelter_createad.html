@@ -1,0 +1,16 @@
+{% extends 'shelter/shelter_base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block action_name %}
+    Create Pet Advertisment
+{% endblock %}
+
+
+{% block second_card %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}    
+        {{form|crispy}}
+        <button class="btn btn-outline-success" style="width: 100%;" type="submit">Create</button>
+    </form>
+{% endblock %}

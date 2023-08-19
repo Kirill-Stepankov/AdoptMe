@@ -1,0 +1,46 @@
+{% extends 'userprofile/common/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load utils_shel_tags %}
+
+{% block content %}
+    <div class="container" style="margin-top: 40px;">
+        <div class="row mb-4">
+            <div class="col-3">
+                <div class="text-center mb-4">
+                    <h2>Actions</h2>
+                </div>
+                <div class="card rounded-4 shadow border-light">
+                    {% block first_card %}
+                    {% endblock %}
+                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                        {% is_shelter_admin shelter request.user.profile as is_admin %}
+                        {% if is_admin %}
+                        <a href="{% url 'shelter:mods' shelter.slug %}" type="button" class="btn btn-outline-dark {% if mods_active %} active {% endif %}">All moderators</a>
+                        <button type="button" class="btn btn-outline-dark {% if membership_active %} active {% endif %}">Applications for membership</button>
+                        <button type="button" class="btn btn-outline-dark {% if confirmation_active %} active {% endif %}">Confirmation of posts</button>
+                        {% endif %}
+                        <a href="{% url 'shelter:create_petad' shelter.slug %}" type="button" class="btn btn-outline-dark {% if create_active %} active {% endif %}">Create pet advertisment</a>
+                        <a href="{% url 'shelter:settings' shelter.slug %}" type="button" class="btn btn-outline-dark {% if edit_active %} active {% endif %}">Shange informaion</a>
+                        <button type="button" class="btn btn-outline-dark">All pets</button>
+                        <a href="{% url 'shelter:detail' shelter.slug %}" type="button" class="btn btn-outline-dark">Shelter main page</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9 text-center">
+                <div class="text-center mb-4">
+                    <h2>
+                        {% block action_name %}
+                        {% endblock %}
+                    </h2>
+                </div>
+                <div class="card rounded-4 shadow border-light">
+                    <div class="col-10 mt-5 mb-5 mx-auto text-start">
+                        {% block second_card %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

@@ -18,7 +18,7 @@ class CreatePetAdView(LoginRequiredMixin, CreateView):
     template_name = "petadvert/create_pet_ad.html"
 
     def form_valid(self, form):
-        PetAdvert.objects.create(ad_type=PetAdvert.AdvertType.PET, owner=self.request.user.profile)
+        PetAdvert.objects.create(ad_type=PetAdvert.AdvertType.PET, owner=self.request.user.profile, **form.cleaned_data)
         return redirect(self.get_success_url())
     
     def get_success_url(self):
@@ -65,7 +65,7 @@ class PetAdDetailView(FormMixin, DetailView):
         return reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.kwargs['petad_pk']})
     
     def post(self, request, *args, **kwargs):
-        if self.request.POST['ad_id']:
+        if self.request.POST.get('ad_id'):
             return ProfileView.post(self, request, *args, **kwargs)
         self.object = self.get_object()
         form = self.get_form()

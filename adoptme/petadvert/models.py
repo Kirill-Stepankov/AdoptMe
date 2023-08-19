@@ -2,6 +2,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from userprofile.models import SexChoices, Profile
+from shelter.models import Shelter
 
 class PetAdvert(models.Model):
     class AdvertType(models.TextChoices):
@@ -21,7 +22,10 @@ class PetAdvert(models.Model):
         LARGE = 'LRG', 'Large'
         EXTRA_LARGE = 'XXL', 'Extra large'
 
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner')
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner', null=True)
+    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='shelter_owner', null=True)
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='author', null=True)
+    is_published = models.BooleanField(default=True)
 
     # pet advert fields
     name = models.CharField(max_length=30, null=True)
@@ -45,7 +49,7 @@ class PetAdvert(models.Model):
     experience = models.PositiveIntegerField(default=0, null=True)
 
     # common
-    city = models.CharField(max_length=100)
+    city = models.CharField(max_length=100, null=True)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
     ad_type = models.CharField(max_length=3, choices=AdvertType.choices, default=AdvertType.PET)

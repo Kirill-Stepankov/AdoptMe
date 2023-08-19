@@ -1,7 +1,12 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from django import http
+from django.db import models
+from django.db.models import Q, Count
+from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
-from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView, DeleteView, DetailView
+from django.http.response import HttpResponse
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic import ListView, CreateView, DeleteView, DetailView, UpdateView, View
 from .models import Shelter, ShelterProfile, ShelterPhoto, ShelterApply
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -9,6 +14,8 @@ from django.http import Http404, HttpRequest, HttpResponse
 from pytils.translit import slugify
 from .forms import CreateShelterForm, ShelterPhotoForm, ShelterApplyForm
 from django.views.generic.edit import FormMixin
+from petadvert.models import PetAdvert
+from userprofile.models import Profile
 
 
 class SheltersView(LoginRequiredMixin, ListView):
@@ -63,7 +70,6 @@ class ShelterDetailView(FormMixin, DetailView):
         context =  super().get_context_data(**kwargs)
         context['photos'] = ShelterPhoto.objects.filter(shelter__slug=self.kwargs['shelter_slug']).all()
         
-        print(self.get_object().shelter.filter(profile=self.request.user.profile))
         if not self.request.user.is_anonymous:
             context['is_admin'] = bool(self.get_object().shelter.filter(profile=self.request.user.profile))
         else:
@@ -100,11 +106,18 @@ class ShelterApplyView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['shelter_id'] = Shelter.objects.get(slug=self.kwargs['shelter_slug']).id
+        context['shelter_id'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).id
         return context
 
     def get_success_url(self):
         return reverse_lazy('shelter:detail', kwargs={'shelter_slug': self.kwargs['shelter_slug']})
+    
+    def form_valid(self, form):
+        if ShelterApply.objects.filter(profile=form.cleaned_data.get('profile'), shelter__slug=self.kwargs['shelter_slug']).first():
+            return self.form_invalid(form)
+        if form.cleaned_data.get('profile').profile.filter(shelter__slug=self.kwargs['shelter_slug']):
+            return self.form_invalid(form)
+        return super().form_valid(form)
     
 class ShelterLeaveView(LoginRequiredMixin, DeleteView):
     model = Shelter
@@ -129,5 +142,115 @@ class ShelterLeaveView(LoginRequiredMixin, DeleteView):
         if not shelterprofile:
             raise Http404
         if shelterprofile.role != ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        return obj
+    
+class ShelterSettingsView(LoginRequiredMixin, UpdateView):
+    model = Shelter
+    slug_url_kwarg = 'shelter_slug'
+    template_name = 'shelter/shelter_settings.html'
+    fields = [
+        'email',
+        'about',
+        'city',
+        'adress',
+        'contact_ref'
+    ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['edit_active'] = True
+        return context  
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('shelter:settings', kwargs={'shelter_slug': self.kwargs['shelter_slug']})
+    
+    def get_object(self, queryset = None) :
+        obj = super().get_object(queryset)
+        if not obj.shelter.filter(profile=self.request.user.profile).first():
+            raise Http404
+        return obj
+    
+class ShelterCreatePetAdView(LoginRequiredMixin, CreateView):
+    model = PetAdvert
+    fields = [
+        'name',
+        'photo',
+        'color',
+        'about',
+        'gender',
+        'type',
+        'size',
+        'age',
+        'house_trained',
+        'health',
+        'breed'
+    ]
+    template_name = 'shelter/shelter_createad.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shelter'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        context['create_active'] = True
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            raise Http404
+        if not get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(profile=self.request.user.profile).first():
+            raise Http404
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:settings', kwargs={'shelter_slug': self.kwargs['shelter_slug']})
+
+    def form_valid(self, form):
+        is_published = ShelterProfile.objects.filter(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), role=ShelterProfile.RoleChoices.ADMIN).first().profile == self.request.user.profile
+        PetAdvert.objects.create(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), author=self.request.user.profile, is_published=is_published, **form.cleaned_data)
+        return redirect(self.get_success_url())
+    
+class ShelterMods(LoginRequiredMixin, ListView):
+    model = Profile
+    template_name = 'shelter/shelter_mods.html'
+    context_object_name = 'mods'
+    paginate_by = 1
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shelter'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        context['mods_active'] = True
+        return context
+    
+    def get_queryset(self):
+        if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
+            raise Http404
+        return Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True))))
+    
+class ShelterDeleteModView(LoginRequiredMixin, DeleteView):
+    model = Shelter
+    pk_url_kwarg = 'shelter_pk'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        shelter = self.object
+        shelterprofile = shelter.shelter.filter(profile=get_object_or_404(Profile, pk=self.kwargs['mod_pk'])) 
+        shelterprofile.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:mods', kwargs={'shelter_slug': self.object.slug})
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        shelterprofile = obj.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        if shelterprofile.profile == get_object_or_404(Profile, pk=self.kwargs['mod_pk']):
             raise Http404
         return obj

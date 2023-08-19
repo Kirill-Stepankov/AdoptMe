@@ -29,7 +29,7 @@
                             <div class="col-5"><h4>{{shelter.shelter.name}}</h4></div>
                             <div class="col-5 text-end">
                                 <a href="{% url 'shelter:detail' shelter.shelter.slug %}" class="btn btn-outline-warning" style="margin-right: 15px;">Main Page</a>
-                                <a class="btn btn-outline-success">Settings</a>
+                                <a href="{% url 'shelter:settings' shelter.shelter.slug %}" class="btn btn-outline-success">Settings</a>
                             </div>
                             <div class="col-2">
                                 {% is_shelter_admin shelter.shelter request as is_admin %}
