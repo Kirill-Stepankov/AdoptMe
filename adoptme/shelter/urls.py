@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import SheltersView, ShelterCreateView, ShelterDeleteView, \
     ShelterDetailView, ShelterApplyView, ShelterLeaveView, ShelterSettingsView, \
-          ShelterCreatePetAdView, ShelterMods, ShelterDeleteModView, ShelterApplicationsView, \
+          ShelterCreatePetAdView, ShelterModsView, ShelterDeleteModView, ShelterApplicationsView, \
           AcceptApplyView, DenyApplyView
 
 app_name = 'shelter'
@@ -14,7 +14,7 @@ urlpatterns = [
     path('leave/<int:shelter_pk>', ShelterLeaveView.as_view(), name='leave'),
     path('settings/<slug:shelter_slug>/', ShelterSettingsView.as_view(), name='settings'),
     path('settings/<slug:shelter_slug>/create', ShelterCreatePetAdView.as_view(), name='create_petad'),
-    path('settings/<slug:shelter_slug>/mods', ShelterMods.as_view(), name='mods'),
+    path('settings/<slug:shelter_slug>/mods', ShelterModsView.as_view(), name='mods'),
     path('delete/<int:shelter_pk>/<int:mod_pk>', ShelterDeleteModView.as_view(), name='delete_mod'),
     path('settings/<slug:shelter_slug>/applications', ShelterApplicationsView.as_view(), name='appls_mods'),
     path('settings/accept/<int:apply_pk>', AcceptApplyView.as_view(), name='accept_apply'),

@@ -18,7 +18,7 @@
                         {% if is_admin %}
                         <a href="{% url 'shelter:mods' shelter.slug %}" type="button" class="btn btn-outline-dark {% if mods_active %} active {% endif %}">All moderators</a>
                         <a href="{% url 'shelter:appls_mods' shelter.slug %}" type="button" class="btn btn-outline-dark {% if membership_active %} active {% endif %}">Applications for membership</a>
-                        <button type="button" class="btn btn-outline-dark {% if confirmation_active %} active {% endif %}">Confirmation of posts</button>
+                        <a type="button" class="btn btn-outline-dark {% if confirmation_active %} active {% endif %}">Confirmation of posts</a>
                         {% endif %}
                         <a href="{% url 'shelter:create_petad' shelter.slug %}" type="button" class="btn btn-outline-dark {% if create_active %} active {% endif %}">Create pet advertisment</a>
                         <a href="{% url 'shelter:settings' shelter.slug %}" type="button" class="btn btn-outline-dark {% if edit_active %} active {% endif %}">Shange informaion</a>

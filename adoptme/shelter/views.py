@@ -209,12 +209,11 @@ class ShelterCreatePetAdView(LoginRequiredMixin, CreateView):
         PetAdvert.objects.create(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), author=self.request.user.profile, is_published=is_published, **form.cleaned_data)
         return redirect(self.get_success_url())
     
-class ShelterMods(LoginRequiredMixin, ListView):
+class ShelterModsView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'shelter/shelter_mods.html'
     context_object_name = 'mods'
     paginate_by = 1
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -225,8 +224,13 @@ class ShelterMods(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
             raise Http404
+        query = self.request.GET.get("q")
         queryset = Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True))))
-        queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).order_by('slug')
+        if query:
+            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).filter(Q(slug__icontains=query)).order_by('slug')
+        else:
+            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).order_by('slug')
+
         return queryset
 
     
@@ -271,6 +275,9 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
         return context
     
     def get_queryset(self):
+        query = self.request.GET.get("q")
+        if query:
+            return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), profile__slug__icontains=query)
         return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']))
     
 class AcceptApplyView(LoginRequiredMixin, DeleteView):
