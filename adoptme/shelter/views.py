@@ -16,6 +16,7 @@ from .forms import CreateShelterForm, ShelterPhotoForm, ShelterApplyForm
 from django.views.generic.edit import FormMixin
 from petadvert.models import PetAdvert
 from userprofile.models import Profile
+from .utils import AcceptDenyMixin
 
 
 class SheltersView(LoginRequiredMixin, ListView):
@@ -213,7 +214,7 @@ class ShelterModsView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'shelter/shelter_mods.html'
     context_object_name = 'mods'
-    paginate_by = 1
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -280,13 +281,10 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
             return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), profile__slug__icontains=query)
         return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']))
     
-class AcceptApplyView(LoginRequiredMixin, DeleteView):
+class AcceptApplyView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
     model = ShelterApply
     pk_url_kwarg = 'apply_pk'
-
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-    
+ 
     def post(self, request, *args, **kwargs): 
         self.object = self.get_object()
         ShelterProfile.objects.create(shelter=self.object.shelter, profile=self.object.profile, role=ShelterProfile.RoleChoices.MODERATOR)
@@ -296,21 +294,9 @@ class AcceptApplyView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('shelter:appls_mods', kwargs={'shelter_slug': self.object.shelter.slug})
     
-    def get_object(self, queryset = None):
-        obj =  super().get_object(queryset)
-        shelterprofile = obj.shelter.shelter.filter(profile=self.request.user.profile).first()
-        if not shelterprofile:
-            raise Http404
-        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
-            raise Http404
-        return obj   
-    
-class DenyApplyView(LoginRequiredMixin, DeleteView):
+class DenyApplyView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
     model = ShelterApply
     pk_url_kwarg = 'apply_pk'
-
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs): 
         self.object = self.get_object()
@@ -319,12 +305,47 @@ class DenyApplyView(LoginRequiredMixin, DeleteView):
     
     def get_success_url(self):
         return reverse_lazy('shelter:appls_mods', kwargs={'shelter_slug': self.object.shelter.slug})
+
+class ShelterPostsAppliesView(LoginRequiredMixin, ListView):
+    model = PetAdvert
+    template_name = 'shelter/shelter_post_applies.html'
+    paginate_by = 1
+    context_object_name = 'applies'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shelter'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        context['confirmation_active'] = True
+        return context
     
-    def get_object(self, queryset = None):
-        obj =  super().get_object(queryset)
-        shelterprofile = obj.shelter.shelter.filter(profile=self.request.user.profile).first()
-        if not shelterprofile:
+    def get_queryset(self):
+        if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
             raise Http404
-        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
-            raise Http404
-        return obj   
+        query = self.request.GET.get("q")
+        if query:
+            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False, author__slug__icontains=query)            
+        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False)
+
+class AcceptPostView(LoginRequiredMixin, AcceptDenyMixin, UpdateView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        PetAdvert.objects.filter(pk=self.object.id).update(is_published=True) 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:appls_posts', kwargs={'shelter_slug': self.object.shelter.slug})
+    
+class DenyPostView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object()
+        self.object.delete()
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:appls_posts', kwargs={'shelter_slug': self.object.shelter.slug})

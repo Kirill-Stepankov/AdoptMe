@@ -6,7 +6,7 @@
 {% load utils_tags %}
 
 {% block action_name %}
-Applications for membership
+Confirmation of posts
 {% endblock %}
 
 
@@ -25,7 +25,7 @@ Applications for membership
           </ul>
         </th>
         <th scope="col">Name</th>
-        <th scope="col">Content</th>
+        <th scope="col">Pet</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
@@ -33,14 +33,14 @@ Applications for membership
       {% for apply in applies %}
       <tr>
         <th scope="row">{{forloop.counter0|add:page_obj.start_index}}</th>
-        <td><a href="{% url 'profile:profile' apply.profile.slug %}" class="link-dark">{{apply.profile.user.username}}</a></td>
-        <td><a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="link-dark">{{apply.content|truncatechars:8}}</a></td>
+        <td><a href="{% url 'profile:profile' apply.author.slug %}" class="link-dark">{{apply.author.user.username}}</a></td>
+        <td><a type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="link-dark">{{apply.name|truncatechars:8}}</a></td>
         <td>
-            <form action="{% url 'shelter:accept_apply' apply.id %}" method="post" style="display: inline;">
+            <form action="{% url 'shelter:accept_post' apply.id %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <a type="submit" onclick="this.closest('form').submit();return false;" class="link-success">Apply</a>
             </form> /
-            <form action="{% url 'shelter:deny_apply' apply.id %}" onclick="this.closest('form').submit();return false;" method="post" style="display: inline;">
+            <form action="{% url 'shelter:deny_post' apply.id %}" onclick="this.closest('form').submit();return false;" method="post" style="display: inline;">
                 {% csrf_token %}
                 <a type="submit" class="link-danger">Deny</a>
             </form>
@@ -55,7 +55,16 @@ Applications for membership
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {{apply.content}}
+            <img src="{{apply.photo.url}}">
+            <h3>Name:</h3> {{apply.name}}
+            <h3>Color:</h3> {{apply.color}}
+            <h3>Gender:</h3> {{apply.get_gender_display}}
+            <h3>Type:</h3> {{apply.get_type_display}}
+            <h3>Size:</h3> {{apply.get_size_display}}
+            <h3>Age:</h3> {{apply.age}} years
+            <h3>Health:</h3> {{apply.health}}
+            <h3>Breed:</h3> {{apply.breed}}
+            <h3>About:</h3> {{apply.about}}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
