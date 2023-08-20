@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 from django import http
 from django.db import models
-from django.db.models import Q, Count
+from django.db.models import Q, Count, F, Value, SlugField
 from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.http.response import HttpResponse
@@ -225,7 +225,10 @@ class ShelterMods(LoginRequiredMixin, ListView):
     def get_queryset(self):
         if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
             raise Http404
-        return Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True))))
+        queryset = Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True))))
+        queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).order_by('slug')
+        return queryset
+
     
 class ShelterDeleteModView(LoginRequiredMixin, DeleteView):
     model = Shelter

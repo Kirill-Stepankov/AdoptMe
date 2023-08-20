@@ -32,7 +32,7 @@
                                 <a href="{% url 'shelter:settings' shelter.shelter.slug %}" class="btn btn-outline-success">Settings</a>
                             </div>
                             <div class="col-2">
-                                {% is_shelter_admin shelter.shelter request as is_admin %}
+                                {% is_shelter_admin shelter.shelter request.user.profile as is_admin %}
                                 {% if is_admin  %}
                                 <form method="post" action="{% url 'shelter:delete' shelter.shelter.id %}">
                                     {% csrf_token %}
