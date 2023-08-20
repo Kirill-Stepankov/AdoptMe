@@ -2,7 +2,8 @@ from django.urls import path
 from .views import SheltersView, ShelterCreateView, ShelterDeleteView, \
     ShelterDetailView, ShelterApplyView, ShelterLeaveView, ShelterSettingsView, \
           ShelterCreatePetAdView, ShelterModsView, ShelterDeleteModView, ShelterApplicationsView, \
-          AcceptApplyView, DenyApplyView, ShelterPostsAppliesView, AcceptPostView, DenyPostView
+          AcceptApplyView, DenyApplyView, ShelterPostsAppliesView, AcceptPostView, DenyPostView, \
+          ShelterPostsView, PetAdDeleteView, ShetlerEditPostView
 
 app_name = 'shelter'
 urlpatterns = [
@@ -22,4 +23,8 @@ urlpatterns = [
     path('settings/<slug:shelter_slug>/posts-applies', ShelterPostsAppliesView.as_view(), name='appls_posts'),
     path('settings/accept-ad/<int:petad_pk>', AcceptPostView.as_view(), name='accept_post'),
     path('settings/deny-ad/<int:petad_pk>', DenyPostView.as_view(), name='deny_post'),
+    path('settings/<slug:shelter_slug>/pets', ShelterPostsView.as_view(), name='pets'),
+    path('settings/delete/<int:petad_pk>', PetAdDeleteView.as_view(), name='delete_petad'),
+    path('settings/edit/<int:shelter_pk>/<int:petad_pk>', ShetlerEditPostView.as_view() ,name='edit_post')
+
 ]

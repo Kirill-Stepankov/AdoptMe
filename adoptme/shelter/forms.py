@@ -1,5 +1,6 @@
 from django import forms
 from .models import Shelter, ShelterPhoto, ShelterApply
+from petadvert.models import PetAdvert
 
 class CreateShelterForm(forms.ModelForm):
     main_photo = forms.ImageField(widget=forms.widgets.FileInput, required=False)
@@ -36,3 +37,22 @@ class ShelterApplyForm(forms.ModelForm):
             'shelter'
         ]
         widgets = {'shelter': forms.HiddenInput(), 'profile': forms.HiddenInput()}
+
+class EditPostForm(forms.ModelForm):
+    photo = forms.ImageField(widget=forms.widgets.FileInput, required=False)
+
+    class Meta:
+        model = PetAdvert
+        fields = [
+        'name',
+        'photo',
+        'color',
+        'about',
+        'gender',
+        'type',
+        'size',
+        'age',
+        'house_trained',
+        'health',
+        'breed'
+    ]

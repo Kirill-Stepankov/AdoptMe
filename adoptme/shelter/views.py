@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import Http404, HttpRequest, HttpResponse
 from pytils.translit import slugify
-from .forms import CreateShelterForm, ShelterPhotoForm, ShelterApplyForm
+from .forms import CreateShelterForm, ShelterPhotoForm, ShelterApplyForm, EditPostForm
 from django.views.generic.edit import FormMixin
 from petadvert.models import PetAdvert
 from userprofile.models import Profile
@@ -214,7 +214,7 @@ class ShelterModsView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'shelter/shelter_mods.html'
     context_object_name = 'mods'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -267,7 +267,7 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
     model = ShelterApply
     template_name = 'shelter/shelter_applies.html'
     context_object_name = 'applies'
-    paginate_by = 1
+    paginate_by = 5
 
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
@@ -309,7 +309,7 @@ class DenyApplyView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
 class ShelterPostsAppliesView(LoginRequiredMixin, ListView):
     model = PetAdvert
     template_name = 'shelter/shelter_post_applies.html'
-    paginate_by = 1
+    paginate_by = 5
     context_object_name = 'applies'
 
     def get_context_data(self, **kwargs):
@@ -349,3 +349,79 @@ class DenyPostView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
     
     def get_success_url(self):
         return reverse_lazy('shelter:appls_posts', kwargs={'shelter_slug': self.object.shelter.slug})
+
+class ShelterPostsView(LoginRequiredMixin, ListView):
+    model = PetAdvert
+    template_name = 'shelter/shelter_posts.html'
+    paginate_by = 5
+    context_object_name = 'posts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shelter'] = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        context['pets_active'] = True
+        return context
+    
+    def get_queryset(self):
+        shelter = get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])
+        shelterprofile = shelter.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        
+        query = self.request.GET.get("q")
+        if query:
+            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True, name__icontains=query)            
+        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True)
+
+class PetAdDeleteView(LoginRequiredMixin, DeleteView):
+    model = PetAdvert
+    pk_url_kwarg = 'petad_pk'
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs): 
+        self.object = self.get_object() 
+        self.object.delete() 
+        return redirect(self.get_success_url())
+    
+    def get_success_url(self):
+        return reverse_lazy('shelter:pets', kwargs={'shelter_slug': self.object.shelter.slug})
+    
+    def get_object(self, queryset = None):
+        obj =  super().get_object(queryset)
+        if not obj.shelter:
+            raise Http404        
+        shelterprofile = obj.shelter.shelter.filter(profile=self.request.user.profile).first()
+        if not shelterprofile:
+            raise Http404
+        if shelterprofile.role == ShelterProfile.RoleChoices.MODERATOR:
+            raise Http404
+        return obj
+    
+class ShetlerEditPostView(LoginRequiredMixin, UpdateView):
+    model = PetAdvert
+    context_object_name = 'ad'
+    template_name = 'shelter/edit_ad.html'
+    pk_url_kwarg = 'petad_pk'
+    form_class = EditPostForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shelter'] = get_object_or_404(Shelter, pk=self.kwargs['shelter_pk'])
+        context['pets_active'] = True
+        return context
+    
+    def get_object(self, queryset=None):
+        obj =  super().get_object(queryset)
+        if not obj.shelter:
+            raise Http404
+        if obj.shelter != get_object_or_404(Shelter, pk=self.kwargs['shelter_pk']):
+            raise Http404
+        if not get_object_or_404(Shelter, pk=self.kwargs['shelter_pk']).shelter.filter(profile=self.request.user.profile).first():
+            raise Http404
+        return obj
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy('shelter:pets', kwargs={'shelter_slug': get_object_or_404(Shelter, pk=self.kwargs['shelter_pk']).slug })
+    

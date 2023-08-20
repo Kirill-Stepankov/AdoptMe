@@ -68,11 +68,12 @@ class ProfileView(LoginRequiredMixin, ListView):
             detail_link = 'http://localhost:8000'+reverse_lazy('petad:petad_detail', kwargs={'petad_pk': self.request.POST['ad_id']})+'\n'
         else:
             detail_link = 'http://localhost:8000'+reverse_lazy('profile:profile', kwargs={'profile_slug': ad.owner.slug})+'\n'
+        owner = ad.owner.user.email if not ad.shelter else ad.shelter.email
         send_mail(
             ad,
             'From: '+self.request.POST['reciever']+'\n'+detail_link+self.request.POST['content'],
             settings.EMAIL_HOST_USER,
-            [ad.owner.user.email]
+            [owner]
         )
 
         if ad.ad_type == ad.AdvertType.PET:

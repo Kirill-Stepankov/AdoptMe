@@ -22,7 +22,7 @@
                         {% endif %}
                         <a href="{% url 'shelter:create_petad' shelter.slug %}" type="button" class="btn btn-outline-dark {% if create_active %} active {% endif %}">Create pet advertisment</a>
                         <a href="{% url 'shelter:settings' shelter.slug %}" type="button" class="btn btn-outline-dark {% if edit_active %} active {% endif %}">Shange informaion</a>
-                        <button type="button" class="btn btn-outline-dark">All pets</button>
+                        <a href="{% url 'shelter:pets' shelter.slug %}" type="button" class="btn btn-outline-dark {% if pets_active %} active {% endif %} ">All pets</a>
                         <a href="{% url 'shelter:detail' shelter.slug %}" type="button" class="btn btn-outline-dark">Shelter main page</a>
                     </div>
                 </div>
