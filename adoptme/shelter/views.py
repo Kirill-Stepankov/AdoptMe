@@ -268,7 +268,7 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
     model = ShelterApply
     template_name = 'shelter/shelter_applies.html'
     context_object_name = 'applies'
-    paginate_by = 1
+    paginate_by = 5
 
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
@@ -278,9 +278,10 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         query = self.request.GET.get("q")
+        ordering = self.request.GET.get("ordering_type")
         if query:
-            return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), profile__slug__icontains=query)
-        return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']))
+            return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), profile__slug__icontains=query).order_by(ordering or 'profile__slug')
+        return ShelterApply.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])).order_by(ordering or 'profile__slug')
     
 class AcceptApplyView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
     model = ShelterApply

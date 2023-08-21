@@ -26,7 +26,7 @@ Applications for membership
                   {% if q %}
                     <input type="hidden" id="q" name="q" value="{{q}}"/>
                   {% endif %}
-                    <input type="hidden" id="ordering_type" name="ordering_type" value="user__username" />
+                    <input type="hidden" id="ordering_type" name="ordering_type" value="profile__user__username" />
                     <button type='submit' class="btn btn-dark dropdown-item">Name+</button>
                 </form>
             </li>
@@ -35,7 +35,7 @@ Applications for membership
                   {% if q %}
                     <input type="hidden" id="q" name="q" value="{{q}}"/>
                   {% endif %}
-                    <input type="hidden" id="ordering_type" name="ordering_type" value="-user__username" />
+                    <input type="hidden" id="ordering_type" name="ordering_type" value="-profile__user__username" />
                     <button type='submit' class="btn btn-dark dropdown-item">Name-</button>
                 </form>
             </li>
@@ -87,8 +87,9 @@ Applications for membership
     <div class="col-10 mx-auto text-center">
       <div class="btn-group" role="group" aria-label="Basic example">
         {% get_GET_value request 'q' as q %}
+        {% get_GET_value request 'ordering_type' as ordering %}
         {% if page_obj.has_previous %}
-            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_obj.previous_page_number}}{% if q %}&q={{q}}{%endif%}">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_obj.previous_page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">
                 Previous Pagex
             </a>
         {% endif%}
@@ -97,11 +98,11 @@ Applications for membership
             {% if page_number == page_obj.paginator.ELLIPSIS %}
                 {{page_number}}
             {% else %}
-                <a type="button" class="btn btn-outline-dark {% if page_obj.start_index == page_number %}active{% endif %}" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_number}}{% if q %}&q={{q}}{%endif%}">{{page_number}}</a>
+                <a type="button" class="btn btn-outline-dark {% if page_obj.start_index == page_number %}active{% endif %}" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">{{page_number}}</a>
             {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
-            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_obj.next_page_number}}{% if q %}&q={{q}}{%endif%}">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:appls_mods' shelter_slug=shelter.slug %}?page={{page_obj.next_page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">
                 Next Page
             </a>
         {% endif%}
