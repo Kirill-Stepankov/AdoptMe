@@ -372,9 +372,10 @@ class ShelterPostsView(LoginRequiredMixin, ListView):
             raise Http404
         
         query = self.request.GET.get("q")
+        ordering = self.request.GET.get('ordering_type')
         if query:
-            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True, name__icontains=query)            
-        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True)
+            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True, name__icontains=query).order_by(ordering or '-time_create')            
+        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=True).order_by(ordering or '-time_create') 
 
 class PetAdDeleteView(LoginRequiredMixin, DeleteView):
     model = PetAdvert

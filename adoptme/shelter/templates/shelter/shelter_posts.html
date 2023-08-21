@@ -19,9 +19,44 @@ Pets
           <button type="button" class="btn btn-link dropdown-toggle" style="color: black;" data-bs-toggle="dropdown" aria-expanded="false">
             Ordering
           </button>
+          {% get_GET_value request 'q' as q %}
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Name+</a></li>
-            <li><a class="dropdown-item" href="#">Name-</a></li>
+            <li>
+                <form method="GET">
+                  {% if q %}
+                    <input type="hidden" id="q" name="q" value="{{q}}"/>
+                  {% endif %}
+                    <input type="hidden" id="ordering_type" name="ordering_type" value="name" />
+                    <button type='submit' class="btn btn-dark dropdown-item">Pet Name+</button>
+                </form>
+            </li>
+            <li>
+                <form method="GET">
+                  {% if q %}
+                    <input type="hidden" id="q" name="q" value="{{q}}"/>
+                  {% endif %}
+                    <input type="hidden" id="ordering_type" name="ordering_type" value="-name" />
+                    <button type='submit' class="btn btn-dark dropdown-item">Pet Name-</button>
+                </form>
+            </li>
+            <li>
+              <form method="GET">
+                {% if q %}
+                  <input type="hidden" id="q" name="q" value="{{q}}"/>
+                {% endif %}
+                  <input type="hidden" id="ordering_type" name="ordering_type" value="time_update" />
+                  <button type='submit' class="btn btn-dark dropdown-item">Date Created+</button>
+              </form>
+            </li>
+            <li>
+              <form method="GET">
+                {% if q %}
+                  <input type="hidden" id="q" name="q" value="{{q}}"/>
+                {% endif %}
+                  <input type="hidden" id="ordering_type" name="ordering_type" value="-time_update" />
+                  <button type='submit' class="btn btn-dark dropdown-item">Date Created-</button>
+              </form>
+            </li>
           </ul>
         </th>
         <th scope="col">Author</th>
@@ -53,8 +88,9 @@ Pets
     <div class="col-10 mx-auto text-center">
       <div class="btn-group" role="group" aria-label="Basic example">
         {% get_GET_value request 'q' as q %}
+        {% get_GET_value request 'ordering_type' as ordering %}
         {% if page_obj.has_previous %}
-            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_obj.previous_page_number}}{% if q %}&q={{q}}{%endif%}">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_obj.previous_page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">
                 Previous Pagex
             </a>
         {% endif%}
@@ -63,11 +99,11 @@ Pets
             {% if page_number == page_obj.paginator.ELLIPSIS %}
                 {{page_number}}
             {% else %}
-                <a type="button" class="btn btn-outline-dark {% if page_obj.start_index == page_number %}active{% endif %}" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_number}}{% if q %}&q={{q}}{%endif%}">{{page_number}}</a>
+                <a type="button" class="btn btn-outline-dark {% if page_obj.start_index == page_number %}active{% endif %}" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">{{page_number}}</a>
             {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
-            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_obj.next_page_number}}{% if q %}&q={{q}}{%endif%}">
+            <a type="button" class="btn btn-outline-dark" href="{% url 'shelter:pets' shelter_slug=shelter.slug %}?page={{page_obj.next_page_number}}{% if q %}&q={{q}}{%endif%}{% if ordering %}&ordering_type={{ordering}}{%endif%}">
                 Next Page
             </a>
         {% endif%}
