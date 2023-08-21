@@ -22,6 +22,7 @@ class Profile(models.Model):
         return self.user.username
 
     class Meta:
+        ordering = ['user__username']
         verbose_name = 'User'
         verbose_name_plural = "Users"
 

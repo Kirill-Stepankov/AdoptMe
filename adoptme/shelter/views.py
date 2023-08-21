@@ -223,14 +223,15 @@ class ShelterModsView(LoginRequiredMixin, ListView):
         return context
     
     def get_queryset(self):
+        ordering = self.request.GET.get('ordering_type')
         if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
             raise Http404
         query = self.request.GET.get("q")
-        queryset = Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True))))
+        queryset = Profile.objects.annotate(num_posts=Count('author', filter=Q(Q(author__shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug'])) & Q(author__is_published=True)))).order_by(ordering or 'user__username')
         if query:
-            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).filter(Q(slug__icontains=query)).order_by('slug')
+            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).filter(Q(slug__icontains=query))
         else:
-            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter')).order_by('slug')
+            queryset = queryset.annotate(shelter=Value(self.kwargs['shelter_slug'], output_field=SlugField())).filter(profile__shelter__slug=F('shelter'))
 
         return queryset
 
@@ -267,7 +268,7 @@ class ShelterApplicationsView(LoginRequiredMixin, ListView):
     model = ShelterApply
     template_name = 'shelter/shelter_applies.html'
     context_object_name = 'applies'
-    paginate_by = 5
+    paginate_by = 1
 
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
