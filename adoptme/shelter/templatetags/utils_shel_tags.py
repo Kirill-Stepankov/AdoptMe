@@ -12,4 +12,6 @@ def is_shelter_admin(shelter, profile):
 def is_participated(mod, shelter_id):
     return mod.profile.filter(shelter__id=shelter_id).first()
 
+#ShelterProfile.objects.filter(profile=request.user.profile, shelter=petad.shelter).first()
+
 

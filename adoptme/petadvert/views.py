@@ -57,7 +57,7 @@ class PetAdDetailView(FormMixin, DetailView):
     
     def get_object(self, queryset=None):
         ad = super().get_object(queryset)
-        if ad.ad_type == PetAdvert.AdvertType.SITTER:
+        if ad.ad_type == PetAdvert.AdvertType.SITTER or not ad.is_published:
             raise Http404
         return super().get_object(queryset)
 
