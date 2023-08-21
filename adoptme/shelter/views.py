@@ -311,7 +311,7 @@ class DenyApplyView(LoginRequiredMixin, AcceptDenyMixin, DeleteView):
 class ShelterPostsAppliesView(LoginRequiredMixin, ListView):
     model = PetAdvert
     template_name = 'shelter/shelter_post_applies.html'
-    paginate_by = 5
+    paginate_by = 1
     context_object_name = 'applies'
 
     def get_context_data(self, **kwargs):
@@ -324,9 +324,10 @@ class ShelterPostsAppliesView(LoginRequiredMixin, ListView):
         if get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).shelter.filter(role=ShelterProfile.RoleChoices.ADMIN).first().profile != self.request.user.profile:
             raise Http404
         query = self.request.GET.get("q")
+        ordering = self.request.GET.get('ordering_type')
         if query:
-            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False, author__slug__icontains=query)            
-        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False)
+            return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False, author__slug__icontains=query).order_by(ordering or 'author__slug')           
+        return PetAdvert.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), is_published=False).order_by(ordering or 'author__slug')
 
 class AcceptPostView(LoginRequiredMixin, AcceptDenyMixin, UpdateView):
     model = PetAdvert

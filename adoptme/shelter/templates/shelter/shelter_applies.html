@@ -19,27 +19,6 @@ Applications for membership
           <button type="button" class="btn btn-link dropdown-toggle" style="color: black;" data-bs-toggle="dropdown" aria-expanded="false">
             Ordering
           </button>
-          {% get_GET_value request 'q' as q %}
-          <ul class="dropdown-menu">
-            <li>
-                <form method="GET">
-                  {% if q %}
-                    <input type="hidden" id="q" name="q" value="{{q}}"/>
-                  {% endif %}
-                    <input type="hidden" id="ordering_type" name="ordering_type" value="profile__user__username" />
-                    <button type='submit' class="btn btn-dark dropdown-item">Name+</button>
-                </form>
-            </li>
-            <li>
-                <form method="GET">
-                  {% if q %}
-                    <input type="hidden" id="q" name="q" value="{{q}}"/>
-                  {% endif %}
-                    <input type="hidden" id="ordering_type" name="ordering_type" value="-profile__user__username" />
-                    <button type='submit' class="btn btn-dark dropdown-item">Name-</button>
-                </form>
-            </li>
-          </ul>
         </th>
         <th scope="col">Name</th>
         <th scope="col">Content</th>
