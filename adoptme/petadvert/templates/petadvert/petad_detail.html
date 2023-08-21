@@ -59,7 +59,6 @@
                         <div class="row">
                             <div class="col-10">
                                 <h1 class="mt-3">{{petad.name}}</h1>
-
                             </div>
                             <div class="col-2">
                                 {% if petad.owner == request.user.profile %}
@@ -73,8 +72,14 @@
                         <hr class="mb-2 bg-danger border-1 border-top border-dark" />
                         <h6 class="mt-4">{{petad.age}} years &nbsp; &#x2022; &nbsp; {{petad.get_gender_display}} &nbsp; &#x2022; &nbsp; {{petad.get_size_display}} &nbsp; &#x2022; &nbsp; {{petad.color}}</h6>
                         <hr class="mt-4 bg-danger border-1 border-top border-dark" />
+                        <h3>Owner</h3>
+                        {% if petad.owner %}
+                        <a href="{% url 'profile:profile' petad.owner.slug %}"><h7>{{petad.owner}}</h7></a>
+                        {% else %}
+                        <a href="{% url 'shelter:detail' petad.shelter.slug %}"><h7>{{petad.shelter}}</h7></a>
+                        {% endif %}
                         <h3 class="mt-4" style="margin-bottom: 30px;">About</h3>
-                        <h4>Type</h4> 
+                        <h4 style="margin-top: 25px;">Type</h4> 
                         <h7>{{petad.get_type_display}}</h7>
                         <h4 style="margin-top: 25px;">Health</h4> 
                         <h7>{{petad.health}}</h7>
