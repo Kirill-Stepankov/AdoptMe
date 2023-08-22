@@ -1,8 +1,150 @@
 {% extends 'userprofile/common/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h1>Hello, {{request.user.username}}</h1>
+<div class="row">
+    <div class="row mx-auto text-center position-relative" style="background-image: url('../../static/userprofile/images/image3.JPG'); height: 370px; background-repeat: no-repeat; background-size: contain;">
+            <div class="position-absolute top-50 start-50 translate-middle">
+                <p style="color: white; font-size: 80px;">Find your new best friend</p>
+                <p style="color: white; font-size: 30px;">Browse pets from our network of lots of shelters, rescues and pet owners</p>
+                <div class="col-4 mx-auto">
+                    <form method="get" class="d-flex" role="search">
+                        <input class="form-control me-2 border-0 shadow-lg" name="q" type="search" style="height: 55px;" placeholder="Search by breed" aria-label="Search">
+                        <button class="btn shadow-lg" style="background-color: rgb(255, 149, 10); color: white; height: 55px; width: 55px;" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+    </div>
+    <div class="row text-center shadow" style="height: 40px; background-color: rgb(255, 149, 10); color: white;">
 </div>
+<div class="container mt-5 mb-3">
+    <div class="row">
+        <div class="col-6 mx-auto">
+            <div class="row mb-4">
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center" style="width: 200px; height: 200px;">
+                        <img src="{% static 'userprofile/images/dog_logo3.png' %}" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
+                        <div class="card-body" style="color: rgb(58, 58, 58);">
+                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Dogs</a></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center" style="width: 200px; height: 200px;">
+                        <img src="{% static 'userprofile/images/cat_logo.png' %}" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
+                        <div class="card-body" style="color: rgb(58, 58, 58);">
+                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Cats</a></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center" style="width: 200px; height: 200px;">
+                        <img class="mt-3" src="{% static 'userprofile/images/raw.png' %}" style="width: 130px; height: 130px; margin-left: auto; margin-right: auto;">
+                        <div class="card-body" style="color: rgb(58, 58, 58);">
+                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Other animals</a></h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center" style="width: 200px; height: 200px;">
+                        <img class="mt-3" src="{% static 'userprofile/images/shel2.PNG' %}" style="width: 130px; height: 130px; margin-left: auto; margin-right: auto;">
+                        <div class="card-body" style="color: rgb(58, 58, 58);">
+                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Shelters</a></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </div>
+    <div class="row mt-5 mb-5 text-center">
+        <h1 style="color: rgb(255, 156, 27);">Pets Available for Adoption</h1>
+    </div>
+    <div class="row">
+        <div class="col-7 mx-auto">
+            <div class="row">
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center">
+                        <img src="{% static 'userprofile/images/500x500.jpg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text"><a href="" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover">of the card's content.</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center">
+                        <img src="{% static 'userprofile/images/500x500.jpg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text"><a href="" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover">of the card's content.</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card border-0 shadow text-center">
+                        <img src="{% static 'userprofile/images/500x500.jpg' %}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <p class="card-text"><a href="" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover">of the card's content.</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card shadow border-0 text-bg-warning mb-3">
+                        <div class="card-body text-center" style="color: white">
+                          <div class="mt-4 mb-3">
+                            <img src="{% static 'userprofile/images/white_paw.png' %}" style="width: 60%;" alt=""><br>   
+                          </div>
+                          <div>                           
+                            Lots of pets available on AdoptMe
+                          </div>                     
+                        </div> 
+                        <div class="card-footer text-center" style="color: white;" >
+                            <a href="" class="btn stretched-link link-underline-opacity-100-hover link-underline-opacity-0" style="color: white;">
+                                <h4>Meet them</h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5 shadow" style="background-color: white;">
+    <div class="row mb-5">
+        <div class="col-7 mx-auto">
+            <div class="row mt-5">
+                <div class="text-center" style="color:rgb(78, 78, 78)">
+                    <h1>Planning to Adopt a Pet?</h1>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-4 text-center">
+                    <h5 style="color: orange;">Checklist for New Adopters</h5>
+                    <p>
+                        Help make the transition, as smooth as possible.
+                    </p>
+                    <a href="https://www.petfinder.com/adopt-or-get-involved/adopting-pets/how-to/adoption-checklist/" class="btn btn-outline-warning mt-5">LEARN MORE</a>
+                </div>
+                <div class="col-4 text-center mt-3">
+                    <h5 style="color: orange;">COVID-19 Resources</h5>
+                    <p>
+                        Get the latest on adoption processes, learn how local shelters and rescue groups are adapting and find out what you can do to help dogs and cats in need right now.
+                    </p>
+                    <a href="https://www.petfinder.com/adopt-or-get-involved/adopting-pets/how-to/adopt-a-pet-during-covid-19/" class="btn btn-outline-warning mt-5">LEARN MORE</a>
+                </div>
+                <div class="col-4 text-center">
+                    <h5 style="color: orange;">Pet Adoption FAQs</h5>
+                    <p>
+                        Get answers to questions you haven't thought of.
+                    </p>
+                    <a href="https://www.petfinder.com/adopt-or-get-involved/adopting-pets/how-to/pet-adoption-faqs/" class="btn btn-outline-warning mt-5">LEARN MORE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
