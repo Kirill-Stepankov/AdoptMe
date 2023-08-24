@@ -4,6 +4,8 @@
 {% load paginate_tags %}
 {% load utils_tags %}
 
+{% block title %} Shelters {% endblock %}
+
 {% block head %}
 {% endblock %}
 
@@ -109,7 +111,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                              <a href="" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover"><h4>{{shelter.name}}</h4></a>
+                              <a href="{% url 'shelter:detail' shelter.slug %}" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover"><h4>{{shelter.name}}</h4></a>
                             </div>
                         </div>
                     </div>

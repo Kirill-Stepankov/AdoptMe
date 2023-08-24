@@ -2,6 +2,8 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+{% block title %} {{shelter.name}} {% endblock %}
+
 {% block content %}
     {% if shelter.main_photo or photos %}
     <div class="row text-center shadow-lg" style="height: 50px; background-color: rgb(236, 138, 26); color: white;">
