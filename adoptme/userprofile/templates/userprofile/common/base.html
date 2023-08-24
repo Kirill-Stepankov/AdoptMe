@@ -28,16 +28,24 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a href="" class="nav-link active" aria-current="page" href="#">Find a Pet</a>
+                <div class="dropdown">
+                  <button class="nav-link active" aria-current="page" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Find a pet
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'CAT' %}">Cats</a></li>
+                    <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'DOG' %}">Dogs</a></li>
+                    <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'HRS' %}">Horses</a></li>
+                    <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'BRD' %}">Birds</a></li>
+                    <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'EXC' %}">Exotic</a></li>
+                  </ul>
+              </div>
               </li>
               <li class="nav-item">
                 <a href="" class="nav-link active" href="#">Shelters & Rescues</a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link active" aria-current="page" href="#">Find a Pet</a>
-              </li>
-              <li class="nav-item">
-                <a href="" class="nav-link active" aria-current="page" href="#">Find a Sitter</a>
+                <a href="{% url 'petad:filter_sitter' %}" class="nav-link active" aria-current="page" href="#">Find a Sitter</a>
               </li>
             </ul>
             <ul class="nav navbar-nav ms-auto d-flex align-items-center">

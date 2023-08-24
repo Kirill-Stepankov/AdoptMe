@@ -5,22 +5,28 @@
 
 {% block content %}
     <div class="row text-center shadow-lg" style="height: 50px; background-color: rgb(236, 138, 26); color: white;">
-        <div class="col-6 position-relative">
-            <div class="position-absolute top-50 start-50 translate-middle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 20 20">
+        <div class="col-6">                
+            <div class="dropdown">
+                <button class="btn stretched-link link-underline-opacity-100-hover link-underline-opacity-0" style="color: white;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <h6 class="mt-1"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
-                  </svg>
-                <a href="#" class="h6 link-underline link-underline-opacity-0" style="color: white;">Find a Pet</a>
+                  </svg>Find a pet</h6>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'CAT' %}">Cats</a></li>
+                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'DOG' %}">Dogs</a></li>
+                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'HRS' %}">Horses</a></li>
+                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'BRD' %}">Birds</a></li>
+                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'EXC' %}">Exotic</a></li>
+                </ul>
             </div>
-        </div>
-        <div class="col-6 position-relative">
-            <div class="position-absolute top-50 start-50 translate-middle">
-                <a href="#" class="h6 link-underline link-underline-opacity-0" style="color: white;">Next Pet</a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-                  </svg>
-            </div>
-        </div>
+    </div>
+    <div class="col-6" style="margin-top: 10px;">
+            <a href="{% url 'profile:home' %}" class="h6 link-underline link-underline-opacity-0" style="color: white;">Main page</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+              </svg>
+    </div>
     </div>
     <div class="row shadow-lg" style="background-color: rgb(27, 27, 27);">
         <div class="col-12 mx-auto">

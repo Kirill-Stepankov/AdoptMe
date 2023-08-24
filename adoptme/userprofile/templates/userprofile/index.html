@@ -8,26 +8,29 @@
                 <p style="color: white; font-size: 80px;">Find your new best friend</p>
                 <p style="color: white; font-size: 30px;">Browse pets from our network of lots of shelters, rescues and pet owners</p>
                 <div class="col-4 mx-auto">
-                    <form method="get" class="d-flex" role="search">
-                        <select class="form-select me-3" aria-label="Default select example">
-                            <option selected>Select type of animal</option>
-                            <option value="1">Dog</option>
-                            <option value="2">Cat</option>
-                            <option value="3">Horse</option>
-                            <option value="4">Bird</option>
-                            <option value="5">Other</option>
-                          </select>
+                    <div class="dropdown">
+                        <button class="btn w-75" style="color: rgb(143, 143, 143); background-color: white; height: 55px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="text-start mt-2">
+                                <h6>Meet them</h6>
+                            </div>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'CAT' %}">Cats</a></li>
+                          <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'DOG' %}">Dogs</a></li>
+                          <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'HRS' %}">Horses</a></li>
+                          <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'BRD' %}">Birds</a></li>
+                          <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'EXC' %}">Exotic</a></li>
+                        </ul>
                         <button class="btn shadow-lg" style="background-color: rgb(255, 149, 10); color: white; height: 55px; width: 55px;" type="submit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                             </svg>
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
     </div>
-    <div class="row text-center shadow" style="height: 40px; background-color: rgb(255, 149, 10); color: white;">
-</div>
+    <div class="row text-center shadow mb-5" style="height: 40px; background-color: rgb(255, 149, 10); color: white;"></div>
 <div class="container mt-5 mb-3">
     <div class="row">
         <div class="col-6 mx-auto">
@@ -36,7 +39,7 @@
                     <div class="card rounded-4 border-0 shadow text-center" style="width: 200px; height: 200px;">
                         <img src="{% static 'userprofile/images/dog_logo3.png' %}" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
                         <div class="card-body" style="color: rgb(58, 58, 58);">
-                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Dogs</a></h6>
+                            <h6><a href="{% url 'petad:filter_petad' 'DOG' %}" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Dogs</a></h6>
                         </div>
                     </div>
                 </div>
@@ -44,7 +47,7 @@
                     <div class="card rounded-4 border-0 shadow text-center" style="width: 200px; height: 200px;">
                         <img src="{% static 'userprofile/images/cat_logo.png' %}" style="width: 150px; height: 150px; margin-left: auto; margin-right: auto;">
                         <div class="card-body" style="color: rgb(58, 58, 58);">
-                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Cats</a></h6>
+                            <h6><a href="{% url 'petad:filter_petad' 'CAT' %}" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Cats</a></h6>
                         </div>
                     </div>
                 </div>
@@ -52,7 +55,7 @@
                     <div class="card rounded-4 border-0 shadow text-center" style="width: 200px; height: 200px;">
                         <img class="mt-3" src="{% static 'userprofile/images/raw.png' %}" style="width: 130px; height: 130px; margin-left: auto; margin-right: auto;">
                         <div class="card-body" style="color: rgb(58, 58, 58);">
-                            <h6><a href="" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Other animals</a></h6>
+                            <h6><a href="{% url 'petad:filter_petad' 'EXC' %}" class="link-dark link-underline-opacity-100-hover link-underline-opacity-0 stretched-link">Other animals</a></h6>
                         </div>
                     </div>
                 </div>
@@ -100,9 +103,18 @@
                           </div>                     
                         </div> 
                         <div class="card-footer text-center" style="color: white;" >
-                            <a href="" class="btn stretched-link link-underline-opacity-100-hover link-underline-opacity-0" style="color: white;">
-                                <h4>Meet them</h4>
-                            </a>
+                            <div class="dropdown">
+                                <button class="btn stretched-link link-underline-opacity-100-hover link-underline-opacity-0" style="color: white;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                  <h4>Meet them</h4>
+                                </button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'CAT' %}">Cats</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'DOG' %}">Dogs</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'HRS' %}">Horses</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'BRD' %}">Birds</a></li>
+                                  <li><a class="dropdown-item" href="{% url 'petad:filter_petad' 'EXC' %}">Exotic</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
