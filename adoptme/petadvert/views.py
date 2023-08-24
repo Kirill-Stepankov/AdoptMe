@@ -3,15 +3,17 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from .models import PetAdvert, PetAdvertPhoto, SitterAd
+from userprofile.models import SexChoices
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView, ListView
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
-from .forms import PetAdvertForm, PetAdvertPhotoForm
+from .forms import PetAdvertForm, PetAdvertPhotoForm, FilterAdForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormMixin
 from django.http import Http404
 from django.core.mail import send_mail
 from userprofile.views import ProfileView
+from django.db.models import Q
 
 class CreatePetAdView(LoginRequiredMixin, CreateView):
     model = PetAdvert
@@ -146,6 +148,7 @@ class FilterSitterView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.SITTER).distinct()
         return context
 
     def get_queryset(self):
@@ -160,14 +163,37 @@ class FilterSitterView(ListView):
         return PetAdvert.objects.filter(is_published=True, ad_type=PetAdvert.AdvertType.SITTER, city__icontains=city, experience__gte=mine, experience__lte=maxe, salary__gte=minp, salary__lte=maxp).order_by(ordering)
 
 
-class FilterPetAdView(ListView):
+class FilterCatView(ListView):
     model = PetAdvert
-    template_name = 'petadvert/filter_pet.html'
+    template_name = 'petadvert/filter_petad.html'
     context_object_name = 'ads'
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #context['form']
+        form = FilterAdForm()
+        context['form'] = form
+        context[self.kwargs['type']] = True
+        context['type'] = self.kwargs['type']
+        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
+        context['colors'] = PetAdvert.objects.values_list('color').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
+        context['breeds'] = PetAdvert.objects.values_list('breed').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
+
+        return context
 
     def get_queryset(self):
-        return super().get_queryset() 
+        if self.kwargs['type'] not in ['CAT', 'DOG', 'HRS', 'BRD', 'EXC']:
+            raise Http404
+        params = self.request.GET
+        gender = params.get('gender', SexChoices.MALE)
+        size = params.get('size', PetAdvert.SizeChoices.MEDIUM)
+        house_trained = params.get('house_trained', False)
+        mina = params.get('age-min', 0)
+        maxa = params.get('age-max', 60)
+        ordering = params.get('ordering_type', '-time_update')
+        city = params.get('city', '')
+        color = params.get('color', '')
+        breed =params.get('breed', '')
+    
+        house_trained = True if house_trained == 'on' else False
+        return PetAdvert.objects.filter(Q(is_published=True, ad_type=PetAdvert.AdvertType.PET, type=self.kwargs['type'], gender=gender, size=size, house_trained=house_trained, age__gte=mina, age__lte=maxa, city__icontains=city, color__icontains=color, breed__icontains=breed)).order_by(ordering)

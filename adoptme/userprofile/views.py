@@ -43,7 +43,7 @@ class IndexView(View):
     def get(self, request):
         context ={}
         context['3pets'] = PetAdvert.objects.filter(is_published=True)[:3]
-        context['more_than_3'] = len(PetAdvert.objects.filter(is_published=True))>3
+        context['more_than_3'] = PetAdvert.objects.filter(is_published=True).count()>3
         return render(request, 'userprofile/index.html', context=context)
     
 class ProfileView(LoginRequiredMixin, ListView):

@@ -22,9 +22,9 @@ class PetAdvert(models.Model):
         LARGE = 'LRG', 'Large'
         EXTRA_LARGE = 'XXL', 'Extra large'
 
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner', null=True)
-    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='shelter_owner', null=True)
-    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='author', null=True)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='owner', null=True, blank=True)
+    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='shelter_owner', null=True, blank=True)
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='author', null=True, blank=True)
     is_published = models.BooleanField(default=True)
 
     # pet advert fields

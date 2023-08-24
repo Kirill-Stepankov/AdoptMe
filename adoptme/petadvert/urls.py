@@ -1,6 +1,6 @@
 from django.urls import path 
 from .views import CreatePetAdView, PetAdDetailView, PetAdUpdateView, PetAdDeleteView, \
-    CreateSitterAdView, SitterAdUpdateView, FilterSitterView, FilterPetAdView
+    CreateSitterAdView, SitterAdUpdateView, FilterSitterView, FilterCatView
 
 app_name = "petad"
 urlpatterns = [
@@ -11,5 +11,5 @@ urlpatterns = [
     path('create/sitterad', CreateSitterAdView.as_view(), name='create_sitterad'),
     path('edit/sitterad/<int:sitterad_pk>', SitterAdUpdateView.as_view(), name='sitterad_update'),
     path('filter/sitter/', FilterSitterView.as_view(), name='filter_sitter'),
-    path('filter/pet/', FilterPetAdView.as_view(), name='filter_petad'),
+    path('filter/pet/<str:type>', FilterCatView.as_view(), name='filter_petad'),
 ]

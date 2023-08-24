@@ -71,7 +71,7 @@ class ShelterDetailView(FormMixin, DetailView):
         context =  super().get_context_data(**kwargs)
         context['photos'] = ShelterPhoto.objects.filter(shelter__slug=self.kwargs['shelter_slug']).all()
         context['3pets'] = PetAdvert.objects.filter(shelter__slug=self.kwargs['shelter_slug'], is_published=True)[:3]
-        context['more_than_3'] = len(PetAdvert.objects.filter(shelter__slug=self.kwargs['shelter_slug'], is_published=True))>3
+        context['more_than_3'] = PetAdvert.objects.filter(shelter__slug=self.kwargs['shelter_slug'], is_published=True).count()>3
         
         if not self.request.user.is_anonymous:
             context['is_admin'] = bool(self.get_object().shelter.filter(profile=self.request.user.profile))
@@ -208,8 +208,8 @@ class ShelterCreatePetAdView(LoginRequiredMixin, CreateView):
         return reverse_lazy('shelter:settings', kwargs={'shelter_slug': self.kwargs['shelter_slug']})
 
     def form_valid(self, form):
-        is_published = ShelterProfile.objects.filter(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), role=ShelterProfile.RoleChoices.ADMIN).first().profile == self.request.user.profile
-        PetAdvert.objects.create(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), author=self.request.user.profile, is_published=is_published, **form.cleaned_data)
+        is_published = ShelterProfile.objects.filter(shelter=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']), role=ShelterProfile.RoleChoices.ADMIN).first().profile == self.request.user.profile
+        PetAdvert.objects.create(shelter=Shelter.objects.get(slug=self.kwargs['shelter_slug']), author=self.request.user.profile, is_published=is_published, city=get_object_or_404(Shelter, slug=self.kwargs['shelter_slug']).city, **form.cleaned_data)
         return redirect(self.get_success_url())
     
 class ShelterModsView(LoginRequiredMixin, ListView):

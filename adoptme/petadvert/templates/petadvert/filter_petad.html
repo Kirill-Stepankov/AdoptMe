@@ -1,0 +1,203 @@
+{% extends 'userprofile/common/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load paginate_tags %}
+{% load utils_tags %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 mb-5">
+        <div class="row">
+                <div class="col-3 mb-5">
+                    <form method="get">
+                    <div class="card rounded-4 shadow border-0">
+
+                        <div class="col-10 mt-4 mb-4 mx-auto text-center">
+
+                            <h3 class="mb-3" style="color: orange;">Gender</h3>
+                            {{form.gender|as_crispy_field}} 
+                            <h3 class="mb-3" style="color: orange;">Size</h3>
+                            {{form.size|as_crispy_field}}
+                            <h3 class="mb-3" style="color: orange;">House trained</h3>
+                            {{form.house_trained|as_crispy_field}}                  
+
+                            <label for="exampleDataList" class="form-label"><h3 style="color: orange;">City</h3></label>
+                            <input class="form-control mb-4" list="datalistOptions" id="exampleDataList" name="city" placeholder="Select a city...">
+                            <datalist id="datalistOptions">
+                                {% for val in cities %}
+                                    <option value="{{val.city}}">
+                                {% endfor %}
+                            </datalist>
+
+                            <label for="exampleDataList" class="form-label"><h3 style="color: orange;">Color</h3></label>
+                            <input class="form-control mb-4" list="datalistOptions" id="exampleDataList" name="color" placeholder="Select a color...">
+                            <datalist id="datalistOptions">
+                                {% for val in colors %}
+                                    <option value="{{val.color}}">
+                                {% endfor %}
+                            </datalist>
+
+                            <label for="exampleDataList" class="form-label"><h3 style="color: orange;">Breed</h3></label>
+                            <input class="form-control" list="datalistOptions" id="exampleDataList" name="breed" placeholder="Select a breed...">
+                            <datalist id="datalistOptions">
+                                {% for val in breeds %}
+                                    <option value="{{val.breed}}">
+                                {% endfor %}
+                            </datalist>
+
+                            <h3 class="mt-4" style="color: orange;">Age</h3>
+
+                            {% get_GET_value request 'age-min' as mine %}
+                            {% get_GET_value request 'age-max' as maxe %}
+
+                            {% if mine %}
+                            <input type="range" class="form-range progress-bar" min="0" max="100" value="{{mine}}" id="timerange" name="age-min">
+                            <label class="form-label">Min Years: <span id="timetext">{{mine}}</span></label>
+                            {% else %}
+                            <input type="range" class="form-range progress-bar" min="0" max="100" value="0" id="timerange" name="age-min">
+                            <label class="form-label">Min Years: <span id="timetext">0</span></label>
+                            {% endif %}
+                            
+                            {% if maxe %}
+                            <input type="range" class="form-range progress-bar" min="0" max="100" value="{{maxe}}" id="timerange1" name="age-max">
+                            <label class="form-label">Max Years: <span id="timetext1">{{maxe}}</span></label>
+                            {% else %}
+                            <input type="range" class="form-range progress-bar" min="0" max="100" value="0" id="timerange1" name="age-max">
+                            <label class="form-label">Max Years: <span id="timetext1">0</span></label>
+                            {% endif %}
+
+
+                            <button class="btn mt-4" type="submit" style="color: white; background-color: orange; width: 100%;">Find</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            <div class="col-9">
+                <nav class="navbar shadow rounded-4 navbar-expand-lg" style="margin-bottom: 20px; background-color: white;">
+                    <span class="navbar-brand mb-0 h1 ms-4" style="margin-left: 10px; color: rgb(70, 65, 65);">Ads:</span>
+                    <ul class="nav navbar-nav ms-auto d-flex me-4 align-items-center">
+                      <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                        <a href="{% url 'petad:filter_petad' type %}" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                              </svg>
+                            Clear Filters
+                        </a>
+                      </li>
+                      <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                          <a class="btn dropdown-toggle shadow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgb(238, 155, 60); color: white;">Type</a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                    <a href="{% url 'petad:filter_sitter' %}" type='submit' class="btn btn-dark dropdown-item">Sitter Ad</a>
+                              </li>
+                              <li>
+                                    <a href="{% url 'petad:filter_petad' 'DOG' %}" type='submit' class="btn btn-dark dropdown-item {% if DOG %}active{%endif%}">Dogs Ad</a>
+                              </li>
+                              <li>
+                                <a href="{% url 'petad:filter_petad' 'CAT' %}" type='submit' class="btn btn-dark dropdown-item {% if CAT %}active{%endif%}">Cats Ad</a>
+                              </li>
+                              <li>
+                                <a href="{% url 'petad:filter_petad' 'HRS' %}" type='submit' class="btn btn-dark dropdown-item {% if HRS %}active{%endif%}">Horses Ad</a>
+                               </li>
+                               <li>
+                                <a href="{% url 'petad:filter_petad' 'BRD' %}" type='submit' class="btn btn-dark dropdown-item {% if BRD %}active{%endif%}">Birds Ad</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'petad:filter_petad' 'EXC' %}" type='submit' class="btn btn-dark dropdown-item {% if EXC %}active{%endif%}">Exotic pets Ad</a>
+                              </li>
+                            </ul>
+                      </li>
+                      <li class="nav-item dropdown" style="padding: 0 10px 0 10px;">
+                          <a class="btn btn-dark dropdown-toggle shadow" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Filter</a>
+                          <ul class="dropdown-menu">
+                              <li>
+                                  <form method="GET">
+                                    {% include 'petadvert/_get_params.html' %}
+                                      <input type="hidden" id="ordering_type" name="ordering_type" value="time_update" />
+                                      <button type='submit' class="btn btn-dark dropdown-item">Date Created +</button>
+                                  </form>
+                              </li>
+                              <li>
+                                  <form method="GET">
+                                    {% include 'petadvert/_get_params.html' %}
+                                      <input type="hidden" id="ordering_type" name="ordering_type" value="-time_update" />
+                                      <button type='submit' class="btn btn-dark dropdown-item">Data Created -</button>
+                                  </form>
+                              </li>
+                              <li>
+                                  <form method="GET">
+                                    {% include 'petadvert/_get_params.html' %}
+                                      <input type="hidden" id="ordering_type" name="ordering_type" value="name" />
+                                      <button type='submit' class="btn btn-dark dropdown-item">Name +</button>
+                                  </form>
+                              </li>
+                              <li>
+                                  <form method="GET">
+                                    {% include 'petadvert/_get_params.html' %}
+                                      <input type="hidden" id="ordering_type" name="ordering_type" value="-name" />
+                                      <button type='submit' class="btn btn-dark dropdown-item">Name -</button>
+                                  </form>
+                              </li>
+                              <li>
+                                <form method="GET">
+                                    {% include 'petadvert/_get_params.html' %}
+                                    <input type="hidden" id="ordering_type" name="ordering_type" value="-age" />
+                                    <button type='submit' class="btn btn-dark dropdown-item">Age: from Max</button>
+                                </form>
+                                </li>
+                                <li>
+                                    <form method="GET">
+                                        {% include 'petadvert/_get_params.html' %}
+                                        <input type="hidden" id="ordering_type" name="ordering_type" value="age" />
+                                        <button type='submit' class="btn btn-dark dropdown-item">Age: from Min</button>
+                                    </form>
+                                </li>
+                            </ul>
+                      </li>
+                  </ul>
+                </nav>
+                <div class="row mt-4">
+                    {% for ad in ads %}
+                    <div class="col-4 mb-4">
+                        <div class="card rounded-4 border-0 shadow text-center">
+                            <div class="row mt-4 mb-1">
+                                <div class="col-10 mx-auto">
+                                    <img src="{{ad.photo.url}}" class="card-img-top rounded-4" style="max-width: 100%; height: 12vw; display: flex; justify-content: center; align-items: flex-start;" alt="...">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                              <a href="{% url 'petad:petad_detail' ad.id %}" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover"><h5>{{ad.name}}</h5></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                    <div class="row mt-5">
+                        <div class="col-10 mx-auto text-center">
+                            {% if page_obj.has_previous %}
+                                <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'petad:filter_petad' type %}?page={{page_obj.previous_page_number}}{% for param in request.GET %}{% get_GET_value request param as value %}{% if param != 'page' %}&{{param}}={{value}}{%endif%}{%endfor%}">
+                                    Previous Page
+                                </a>
+                            {% endif%}
+                            {% get_proper_elided_page_range paginator page_obj.number as page_range %}
+                            {% for page_number in page_range %}
+                                {% if page_number == page_obj.paginator.ELLIPSIS %}
+                                    {{page_number}}
+                                {% else %}
+                                    <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'petad:filter_petad' type %}?page={{page_number}}{% for param in request.GET %}{% get_GET_value request param as value %}{% if param != 'page' %}&{{param}}={{value}}{%endif%}{%endfor%}" class="{% if page_number == page_obj.number %}current{% endif %}">{{page_number}}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <a class="btn" style="background-color: rgb(238, 155, 60); color: white;" href="{% url 'petad:filter_petad' type %}?page={{page_obj.next_page_number}}{% for param in request.GET %}{% get_GET_value request param as value %}{% if param != 'page' %}&{{param}}={{value}}{%endif%}{%endfor%}">
+                                    Next Page
+                                </a>
+                            {% endif%}
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'userprofile/js/slider.js' %}"></script>
+{% endblock %}

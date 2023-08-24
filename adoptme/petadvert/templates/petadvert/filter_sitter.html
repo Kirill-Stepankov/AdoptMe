@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row">
                 <div class="col-3">
                     <form method="get">
@@ -74,6 +74,9 @@
                             <label for="exampleDataList" class="form-label"><h3 style="color: orange;">City</h3></label>
                             <input class="form-control" list="datalistOptions" id="exampleDataList" name="city" placeholder="Select a city...">
                             <datalist id="datalistOptions">
+                                {% for val in cities %}
+                                    <option value="{{val.city}}">
+                                {% endfor %}
                             </datalist>
 
                             <h3 class="mt-4" style="color: orange;">Experience</h3>
@@ -120,19 +123,19 @@
                                     <a href="" type='submit' class="btn btn-dark dropdown-item active">Sitter Ad</a>
                               </li>
                               <li>
-                                    <a href="" type='submit' class="btn btn-dark dropdown-item">Dogs Ad</a>
+                                    <a href="{% url 'petad:filter_petad' 'DOG' %}" type='submit' class="btn btn-dark dropdown-item">Dogs Ad</a>
                               </li>
                               <li>
-                                <a href="" type='submit' class="btn btn-dark dropdown-item">Cats Ad</a>
+                                <a href="{% url 'petad:filter_petad' 'CAT' %}" type='submit' class="btn btn-dark dropdown-item">Cats Ad</a>
                               </li>
                               <li>
-                                <a href="" type='submit' class="btn btn-dark dropdown-item">Horses Ad</a>
+                                <a href="{% url 'petad:filter_petad' 'HRS' %}" type='submit' class="btn btn-dark dropdown-item">Horses Ad</a>
                                </li>
                                <li>
-                                <a href="" type='submit' class="btn btn-dark dropdown-item">Birds Ad</a>
+                                <a href="{% url 'petad:filter_petad' 'BRD' %}" type='submit' class="btn btn-dark dropdown-item">Birds Ad</a>
                                 </li>
                                 <li>
-                                    <a href="" type='submit' class="btn btn-dark dropdown-item">Exotic pets Ad</a>
+                                    <a href="{% url 'petad:filter_petad' 'EXC' %}" type='submit' class="btn btn-dark dropdown-item">Exotic pets Ad</a>
                               </li>
                             </ul>
                       </li>
