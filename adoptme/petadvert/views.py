@@ -148,7 +148,7 @@ class FilterSitterView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.SITTER).distinct()
+        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.SITTER).order_by().distinct()
         return context
 
     def get_queryset(self):
@@ -175,9 +175,10 @@ class FilterCatView(ListView):
         context['form'] = form
         context[self.kwargs['type']] = True
         context['type'] = self.kwargs['type']
-        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
-        context['colors'] = PetAdvert.objects.values_list('color').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
-        context['breeds'] = PetAdvert.objects.values_list('breed').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).distinct()
+        context['cities'] = PetAdvert.objects.values_list('city').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).order_by().distinct()
+        context['colors'] = PetAdvert.objects.values_list('color').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).order_by().distinct()
+        context['breeds'] = PetAdvert.objects.values_list('breed').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).order_by().distinct()
+        context['shelters'] = PetAdvert.objects.values_list('shelter').filter(ad_type=PetAdvert.AdvertType.PET, is_published=True, type=self.kwargs['type']).order_by().distinct() 
 
         return context
 
@@ -194,6 +195,10 @@ class FilterCatView(ListView):
         city = params.get('city', '')
         color = params.get('color', '')
         breed =params.get('breed', '')
-    
         house_trained = True if house_trained == 'on' else False
-        return PetAdvert.objects.filter(Q(is_published=True, ad_type=PetAdvert.AdvertType.PET, type=self.kwargs['type'], gender=gender, size=size, house_trained=house_trained, age__gte=mina, age__lte=maxa, city__icontains=city, color__icontains=color, breed__icontains=breed)).order_by(ordering)
+        shelter = params.get('shelter')
+
+        base_q = Q(is_published=True, ad_type=PetAdvert.AdvertType.PET, type=self.kwargs['type'], gender=gender, size=size, house_trained=house_trained, age__gte=mina, age__lte=maxa, city__icontains=city, color__icontains=color, breed__icontains=breed)
+        if shelter:
+            return PetAdvert.objects.filter(Q(base_q, shelter__name__icontains=shelter)).order_by(ordering)
+        return PetAdvert.objects.filter(base_q).order_by(ordering)

@@ -27,23 +27,38 @@
                             <input class="form-control mb-4" list="datalistOptions" id="exampleDataList" name="city" placeholder="Select a city...">
                             <datalist id="datalistOptions">
                                 {% for val in cities %}
-                                    <option value="{{val.city}}">
+                                {% get_value_from_iterable val 0 as city %}
+                                    <option value="{{city}}">
                                 {% endfor %}
                             </datalist>
 
-                            <label for="exampleDataList" class="form-label"><h3 style="color: orange;">Color</h3></label>
-                            <input class="form-control mb-4" list="datalistOptions" id="exampleDataList" name="color" placeholder="Select a color...">
-                            <datalist id="datalistOptions">
+                            <label for="exampleDataList2" class="form-label"><h3 style="color: orange;">Color</h3></label>
+                            <input class="form-control mb-4" list="datalistOptions2" id="exampleDataList2" name="color" placeholder="Select a color...">
+                            <datalist id="datalistOptions2">
                                 {% for val in colors %}
-                                    <option value="{{val.color}}">
+                                {% get_value_from_iterable val 0 as color %}
+                                    <option value="{{color}}">
                                 {% endfor %}
                             </datalist>
 
-                            <label for="exampleDataList" class="form-label"><h3 style="color: orange;">Breed</h3></label>
-                            <input class="form-control" list="datalistOptions" id="exampleDataList" name="breed" placeholder="Select a breed...">
-                            <datalist id="datalistOptions">
+                            <label for="exampleDataList3" class="form-label"><h3 style="color: orange;">Shelter</h3></label>
+                            <input class="form-control mb-4" list="datalistOptions3" id="exampleDataList3" name="shelter" placeholder="Select a shelter...">
+                            <datalist id="datalistOptions3">
+                                {% for val in shelters %}
+                                {% get_value_from_iterable val 0 as id %}
+                                    {% if id %}
+                                    {% get_shelter id as name %}
+                                    <option value="{{name}}">
+                                    {% endif %}
+                                {% endfor %}
+                            </datalist>
+
+                            <label for="exampleDataList4" class="form-label"><h3 style="color: orange;">Breed</h3></label>
+                            <input class="form-control" list="datalistOptions4" id="exampleDataList4" name="breed" placeholder="Select a breed...">
+                            <datalist id="datalistOptions4">
                                 {% for val in breeds %}
-                                    <option value="{{val.breed}}">
+                                {% get_value_from_iterable val 0 as breed %}
+                                    <option value="{{breed}}">
                                 {% endfor %}
                             </datalist>
 

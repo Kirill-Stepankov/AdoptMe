@@ -75,7 +75,8 @@
                             <input class="form-control" list="datalistOptions" id="exampleDataList" name="city" placeholder="Select a city...">
                             <datalist id="datalistOptions">
                                 {% for val in cities %}
-                                    <option value="{{val.city}}">
+                                    {% get_value_from_iterable val 0 as city %}
+                                    <option value="{{city}}">
                                 {% endfor %}
                             </datalist>
 
