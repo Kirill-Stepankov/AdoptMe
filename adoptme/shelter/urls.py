@@ -3,7 +3,7 @@ from .views import SheltersView, ShelterCreateView, ShelterDeleteView, \
     ShelterDetailView, ShelterApplyView, ShelterLeaveView, ShelterSettingsView, \
           ShelterCreatePetAdView, ShelterModsView, ShelterDeleteModView, ShelterApplicationsView, \
           AcceptApplyView, DenyApplyView, ShelterPostsAppliesView, AcceptPostView, DenyPostView, \
-          ShelterPostsView, PetAdDeleteView, ShetlerEditPostView
+          ShelterPostsView, PetAdDeleteView, ShetlerEditPostView, SheltersListView
 
 app_name = 'shelter'
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('settings/deny-ad/<int:petad_pk>', DenyPostView.as_view(), name='deny_post'),
     path('settings/<slug:shelter_slug>/pets', ShelterPostsView.as_view(), name='pets'),
     path('settings/delete/<int:petad_pk>', PetAdDeleteView.as_view(), name='delete_petad'),
-    path('settings/edit/<int:shelter_pk>/<int:petad_pk>', ShetlerEditPostView.as_view() ,name='edit_post')
+    path('settings/edit/<int:shelter_pk>/<int:petad_pk>', ShetlerEditPostView.as_view() ,name='edit_post'),
+    path('list', SheltersListView.as_view(), name='list')
 
 ]

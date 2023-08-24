@@ -430,4 +430,24 @@ class ShetlerEditPostView(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self) -> str:
         return reverse_lazy('shelter:pets', kwargs={'shelter_slug': get_object_or_404(Shelter, pk=self.kwargs['shelter_pk']).slug })
+
+class SheltersListView(ListView):
+    model = Shelter
+    context_object_name = 'shelters'
+    template_name = 'shelter/shelter_list.html'
+    paginate_by = 8
+
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['cities'] = Shelter.objects.values_list('city').order_by().distinct()
+        return context
+    
+    def get_queryset(self):
+        params = self.request.GET
+        city = params.get('city', '')
+        minp = params.get('exp-min', 0)
+        maxp = params.get('exp-max', 3000)
+        ordering = params.get('ordering_type', '-name')
+
+        return Shelter.objects.annotate(num_ads=Count('shelter')).filter(city__icontains=city, num_ads__gte=minp, num_ads__lte=maxp).order_by(ordering)
     
