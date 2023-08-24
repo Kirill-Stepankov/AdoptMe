@@ -70,6 +70,8 @@ class ShelterDetailView(FormMixin, DetailView):
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context['photos'] = ShelterPhoto.objects.filter(shelter__slug=self.kwargs['shelter_slug']).all()
+        context['3pets'] = PetAdvert.objects.filter(shelter__slug=self.kwargs['shelter_slug'], is_published=True)[:3]
+        context['more_than_3'] = len(PetAdvert.objects.filter(shelter__slug=self.kwargs['shelter_slug'], is_published=True))>3
         
         if not self.request.user.is_anonymous:
             context['is_admin'] = bool(self.get_object().shelter.filter(profile=self.request.user.profile))

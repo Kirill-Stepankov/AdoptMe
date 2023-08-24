@@ -1,8 +1,9 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from django.db import models
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from .models import PetAdvert, PetAdvertPhoto, SitterAd
-from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView, ListView
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
 from .forms import PetAdvertForm, PetAdvertPhotoForm
@@ -136,3 +137,37 @@ class PetAdDeleteView(LoginRequiredMixin, DeleteView):
         if obj.owner != self.request.user.profile:
             raise Http404
         return obj
+
+class FilterSitterView(ListView):
+    model = PetAdvert
+    template_name = 'petadvert/filter_sitter.html'
+    context_object_name = 'ads'
+    paginate_by = 3
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_queryset(self):
+        params = self.request.GET
+        minp = params.get('min-price', 2500)
+        maxp = params.get('max-price', 7500)
+        city = params.get('city', '')
+        mine = params.get('exp-min', 2)
+        maxe = params.get('exp-max', 6)
+        ordering = params.get('ordering_type', '-time_update')
+
+        return PetAdvert.objects.filter(is_published=True, ad_type=PetAdvert.AdvertType.SITTER, city__icontains=city, experience__gte=mine, experience__lte=maxe, salary__gte=minp, salary__lte=maxp).order_by(ordering)
+
+
+class FilterPetAdView(ListView):
+    model = PetAdvert
+    template_name = 'petadvert/filter_pet.html'
+    context_object_name = 'ads'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #context['form']
+
+    def get_queryset(self):
+        return super().get_queryset() 

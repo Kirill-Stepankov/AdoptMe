@@ -170,5 +170,48 @@
                         </div>
                     </div>
                     <!-- endmodal-->
+                    <div class="row mt-5 mb-5">
+                        <div class="text-center mb-5 mt-5">
+                            <h1 style="color: orange;">Pets from Rico Pet Recovery</h1>
+                        </div>
+                        <div class="col-12 mx-auto">
+                            <div class="row">
+                                {% for pet in 3pets %}
+                                <div class="col-3">
+                                    <div class="card rounded-4 border-0 shadow text-center">
+                                        <!-- class="card-img-top d-block w-100" style="height: 320px; object-fit:contain;"-->
+                                        <!-- style="max-width: 100%; height: 17vw; display: flex; justify-content: center; align-items: flex-start;" -->
+                                        <div>
+                                            <img src="{{pet.photo.url}}" class="card-img-top rounded-4" style="max-width: 100%; height: 18vw; display: flex; justify-content: center; align-items: flex-start;" alt="...">
+                                        </div>
+                                        <div class="card-body">
+                                          <p class="card-text"><a href="{% url 'petad:petad_detail' pet.id %}" class="stretched-link link-warning link-underline-opacity-0 link-underline-opacity-100-hover">{{pet.name}}</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                
+                                {% if more_than_3 %}
+                                <div class="col-3">
+                                    <div class="card rounded-4 shadow border-0 text-bg-warning mb-3">
+                                        <div class="card-body text-center" style="color: white">
+                                          <div class="mt-5 mb-5">
+                                            <img src="{% static 'userprofile/images/white_paw.png' %}" style="width: 67%;" alt=""><br>   
+                                          </div>
+                                          <div>                           
+                                            Lots of pets available on {{shelter.name}}
+                                          </div>                     
+                                        </div> 
+                                        <div class="card-footer text-center" style="color: white;" >
+                                            <a href="" class="btn stretched-link link-underline-opacity-100-hover link-underline-opacity-0" style="color: white;">
+                                                <h4>Meet them</h4>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
     </div>
 {% endblock %}

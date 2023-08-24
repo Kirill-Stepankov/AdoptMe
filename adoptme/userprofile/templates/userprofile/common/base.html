@@ -7,7 +7,9 @@
     <title>Bootstrap demo</title>
     <link rel="shortcut icon" href="{% static 'userprofile/images/logo.ico' %}" type="image/x-icon"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    {% block headd %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'userprofile/css/price-slider.css' %}">
+
+    {% block head %}{% endblock %}
 
   </head>
   <body style="background-color: rgb(240, 240, 240);">
@@ -26,13 +28,16 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a href="" class="nav-link active" aria-current="page" href="#">Find a Pet</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a href="" class="nav-link active" href="#">Shelters & Rescues</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
+                <a href="" class="nav-link active" aria-current="page" href="#">Find a Pet</a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link active" aria-current="page" href="#">Find a Sitter</a>
               </li>
             </ul>
             <ul class="nav navbar-nav ms-auto d-flex align-items-center">
@@ -68,7 +73,25 @@
 
     {% block content %}
     {% endblock %}
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script>
+      const events = ['mousemove', 'touchmove']
+
+      $.each(events, function(k,v) {
+      $('#timerange').on(v, function() {
+          $('#timetext').text($('#timerange').val());
+      });
+      })
+
+      $.each(events, function(k,v) {
+      $('#timerange1').on(v, function() {
+          $('#timetext1').text($('#timerange1').val());
+      });
+      })
+  </script>
   </body>
 </html>

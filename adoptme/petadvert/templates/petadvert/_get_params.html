@@ -1,0 +1,7 @@
+{% load utils_tags %}
+{% for param in request.GET %}
+    {% get_GET_value request param as value %}
+    {% if param != 'ordering_type' %}
+        <input type="hidden" id="ad_type" name="{{param}}" value="{{value}}"/>
+    {% endif %}
+{% endfor %}
