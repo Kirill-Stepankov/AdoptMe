@@ -42,11 +42,11 @@ class LoginUserView(LoginView):
 class IndexView(View):
     def get(self, request):
         context ={}
-        context['3pets'] = PetAdvert.objects.filter(is_published=True)[:3]
+        context['3pets'] = PetAdvert.objects.filter(is_published=True, ad_type=PetAdvert.AdvertType.PET)[:3]
         context['more_than_3'] = PetAdvert.objects.filter(is_published=True).count()>3
         return render(request, 'userprofile/index.html', context=context)
     
-class ProfileView(LoginRequiredMixin, ListView):
+class ProfileView(ListView):
     model = PetAdvert
     template_name = 'userprofile/userprofile.html'
     paginate_by = 3

@@ -1,6 +1,7 @@
 from django.urls import path 
 from .views import RegisterView, IndexView, LoginUserView, ProfileView, EditProfileView
 from django.contrib.auth.views import LogoutView
+from django.views.decorators.cache import cache_page
 
 app_name = "profile"
 urlpatterns = [
