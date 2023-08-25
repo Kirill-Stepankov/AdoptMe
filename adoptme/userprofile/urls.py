@@ -1,5 +1,6 @@
 from django.urls import path 
-from .views import RegisterView, IndexView, LoginUserView, ProfileView, EditProfileView
+from .views import RegisterView, IndexView, LoginUserView, ProfileView, EditProfileView, \
+    pageNotFound, serverError
 from django.contrib.auth.views import LogoutView
 from django.views.decorators.cache import cache_page
 

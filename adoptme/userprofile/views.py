@@ -97,9 +97,11 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.profile
     
+def pageNotFound(request, exception):
+    return render(request, 'userprofile/error.html', context={'status': 404})
 
-    
-    
+def serverError(request):
+    return render(request, 'userprofile/error.html', context={'status': 500})
 
 
     
