@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     "crispy_bootstrap5",
+    'django_extensions',
     'userprofile.apps.UserprofileConfig',
     'shelter.apps.ShelterConfig',
     'petadvert.apps.PetadvertConfig',
