@@ -12,3 +12,4 @@ adoptme/userprofile/templatetags/__pycache__/
 adoptme/petadvert/migrations
 .env
 adoptme_cache/
+data/
